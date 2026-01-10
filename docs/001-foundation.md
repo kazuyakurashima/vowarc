@@ -232,42 +232,42 @@ app/
 ## Todo
 
 ### 環境構築
-- [ ] Supabase プロジェクト作成
-- [ ] 環境変数設定（.env）
-- [ ] Supabase クライアント設定
+- [x] Supabase プロジェクト作成
+- [x] 環境変数設定（.env）
+- [x] Supabase クライアント設定
 
 ### 認証
-- [ ] Supabase Auth 導入
-- [ ] ログイン画面実装
-- [ ] 登録画面実装
-- [ ] 認証状態管理hook作成
+- [x] Supabase Auth 導入
+- [x] ログイン画面実装
+- [x] 登録画面実装
+- [x] 認証状態管理hook作成
 
 ### データベース
-- [ ] users テーブル作成
-- [ ] vows テーブル作成
-- [ ] meaning_statements テーブル作成
-- [ ] checkins テーブル作成
-- [ ] commitments テーブル作成
-- [ ] RLS (Row Level Security) 設定
+- [x] users テーブル作成
+- [x] vows テーブル作成
+- [x] meaning_statements テーブル作成
+- [x] checkins テーブル作成
+- [x] commitments テーブル作成
+- [x] RLS (Row Level Security) 設定
 
 ### API設定
-- [ ] OpenAI API クライアント設定
-- [ ] API呼び出し共通関数作成
+- [x] OpenAI API クライアント設定
+- [x] API呼び出し共通関数作成
 - [ ] エラーハンドリング実装
 
 ### 共通コンポーネント
-- [ ] テーマ定義（colors, typography, spacing）
-- [ ] Design Tokens実装（カラー/タイポ/スペーシング/トランジション）
-- [ ] Noto Serif JP / Noto Sans JP / Inter フォント導入
-- [ ] Button コンポーネント
-- [ ] TextInput コンポーネント
-- [ ] Loading コンポーネント
-- [ ] ErrorBoundary 実装
+- [x] テーマ定義（colors, typography, spacing）
+- [x] Design Tokens実装（カラー/タイポ/スペーシング/トランジション）
+- [x] Noto Serif JP / Noto Sans JP / Inter フォント導入
+- [x] Button コンポーネント
+- [x] TextInput コンポーネント
+- [x] Loading コンポーネント
+- [x] ErrorBoundary 実装
 
 ### ナビゲーション
-- [ ] (auth) グループ作成
-- [ ] (onboarding) グループ作成
-- [ ] (tabs) グループ作成
+- [x] (auth) グループ作成
+- [x] (onboarding) グループ作成
+- [x] (tabs) グループ作成
 - [ ] 認証状態によるルーティング制御
 
 ---

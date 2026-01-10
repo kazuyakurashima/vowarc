@@ -1,41 +1,51 @@
 /**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
+ * VowArk Design System v0.1 - Theme
+ *
+ * Consolidated theme file that exports all design tokens.
+ * Based on Design DNA: Quiet Luxury, Tough Love, Integrity
  */
 
-import { Platform } from 'react-native';
+// Export all design tokens
+export * from './colors';
+export * from './typography';
+export * from './spacing';
+export * from './transitions';
+export * from './elevation';
+export * from './haptics';
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+/**
+ * Legacy compatibility exports
+ * TODO: Migrate existing components to use new design tokens
+ */
+import { Platform } from 'react-native';
+import { colors } from './colors';
 
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+    text: colors.textPrimary,
+    background: colors.background,
+    tint: colors.accent,
+    icon: colors.textSecondary,
+    tabIconDefault: colors.textSecondary,
+    tabIconSelected: colors.accent,
   },
   dark: {
+    // Note: VowArk v0.1 focuses on light mode only
+    // Dark mode support is planned for future iterations
     text: '#ECEDEE',
     background: '#151718',
-    tint: tintColorDark,
+    tint: '#fff',
     icon: '#9BA1A6',
     tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
+    tabIconSelected: '#fff',
   },
 };
 
 export const Fonts = Platform.select({
   ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
     sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
     serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
     rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
     mono: 'ui-monospace',
   },
   default: {

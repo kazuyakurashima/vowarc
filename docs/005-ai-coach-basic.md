@@ -314,7 +314,7 @@ async function checkContradiction(
 - [ ] Mirror Feedback出力形式定義
 
 ### API実装
-- [ ] OpenAI SDK導入
+- [x] OpenAI SDK導入
 - [ ] /api/chat エンドポイント作成
 - [ ] 応答パース関数実装
 
@@ -330,7 +330,7 @@ async function checkContradiction(
 - [ ] 矛盾検出結果の構造化
 
 ### 介入設定（追加）
-- [ ] user_intervention_settings テーブル作成
+- [x] user_intervention_settings テーブル作成
 - [ ] 介入設定取得API
 - [ ] 介入設定更新API
 - [ ] 介入設定UIコンポーネント
