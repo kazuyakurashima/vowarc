@@ -5,10 +5,13 @@
 
 import { supabase } from '../supabase';
 import * as FileSystem from 'expo-file-system';
+import * as ImageManipulator from 'expo-image-manipulator';
 import { decode } from 'base64-arraybuffer';
 
 const EVIDENCE_BUCKET = 'evidence-images';
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_IMAGE_WIDTH = 1920; // Resize to max 1920px width
+const MAX_IMAGE_HEIGHT = 1920; // Resize to max 1920px height
 
 /**
  * Upload an evidence image to Supabase Storage
@@ -24,21 +27,27 @@ export async function uploadEvidenceImage(
   filename?: string
 ): Promise<string> {
   try {
+    // Compress image first
+    console.log('Compressing image...');
+    const compressedUri = await compressImage(uri);
+    console.log('Image compressed:', compressedUri);
+
     // Generate filename if not provided
     const timestamp = Date.now();
-    const extension = uri.split('.').pop() || 'jpg';
-    const finalFilename = filename || `${timestamp}.${extension}`;
+    const finalFilename = filename || `${timestamp}.jpg`; // Always use .jpg after compression
     const filePath = `${userId}/${finalFilename}`;
 
-    // Read file as base64
-    const base64 = await FileSystem.readAsStringAsync(uri, {
+    // Read compressed file as base64
+    const base64 = await FileSystem.readAsStringAsync(compressedUri, {
       encoding: FileSystem.EncodingType.Base64,
     });
 
     // Check file size (base64 is ~33% larger than binary)
     const estimatedSize = (base64.length * 3) / 4;
+    console.log('Compressed file size:', (estimatedSize / 1024 / 1024).toFixed(2), 'MB');
+
     if (estimatedSize > MAX_FILE_SIZE) {
-      throw new Error(`ファイルサイズが大きすぎます（最大: 5MB）`);
+      throw new Error(`画像が大きすぎます（圧縮後: ${(estimatedSize / 1024 / 1024).toFixed(1)}MB）。\nより小さい画像を選択してください。`);
     }
 
     // Convert base64 to ArrayBuffer
@@ -121,11 +130,34 @@ function getContentType(extension: string): string {
 }
 
 /**
- * Compress image before upload (future enhancement)
- * Currently not implemented - using raw upload
+ * Compress and resize image before upload
+ *
+ * @param uri - Local file URI
+ * @returns Compressed image URI
  */
 export async function compressImage(uri: string): Promise<string> {
-  // TODO: Implement image compression using expo-image-manipulator
-  // For MVP, we skip compression and rely on client-side file size check
-  return uri;
+  try {
+    // Compress and resize image
+    const result = await ImageManipulator.manipulateAsync(
+      uri,
+      [
+        {
+          resize: {
+            width: MAX_IMAGE_WIDTH,
+            height: MAX_IMAGE_HEIGHT,
+          },
+        },
+      ],
+      {
+        compress: 0.7, // 70% quality
+        format: ImageManipulator.SaveFormat.JPEG,
+      }
+    );
+
+    return result.uri;
+  } catch (error) {
+    console.error('Error compressing image:', error);
+    // Return original URI if compression fails
+    return uri;
+  }
 }

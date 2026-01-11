@@ -50,7 +50,7 @@ export function ImagePicker({ onImageSelected, disabled = false }: ImagePickerPr
         mediaTypes: ExpoImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [4, 3],
-        quality: 0.8, // Compress to 80% quality
+        quality: 1, // Max quality - we compress on server
       });
 
       if (!result.canceled && result.assets[0]) {
@@ -71,7 +71,7 @@ export function ImagePicker({ onImageSelected, disabled = false }: ImagePickerPr
         mediaTypes: ExpoImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [4, 3],
-        quality: 0.8, // Compress to 80% quality
+        quality: 1, // Max quality - we compress on server
       });
 
       if (!result.canceled && result.assets[0]) {
@@ -110,7 +110,7 @@ export function ImagePicker({ onImageSelected, disabled = false }: ImagePickerPr
       </View>
 
       <Text style={styles.hint}>
-        最大ファイルサイズ: 5MB
+        画像は自動的に圧縮されます（最大5MB）
       </Text>
     </View>
   );
