@@ -4,6 +4,7 @@
  */
 
 import { openai } from '@/lib/openai/client';
+import { toFile } from 'openai/uploads';
 
 export async function POST(request: Request) {
   try {
@@ -13,6 +14,25 @@ export async function POST(request: Request) {
     if (!audioUrl || typeof audioUrl !== 'string') {
       return Response.json(
         { error: 'Invalid request: audioUrl is required' },
+        { status: 400 }
+      );
+    }
+
+    // SSRF Protection: Validate URL is from Supabase Storage
+    const supabaseProjectUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+    if (!supabaseProjectUrl) {
+      return Response.json(
+        { error: 'Server configuration error' },
+        { status: 500 }
+      );
+    }
+
+    const supabaseDomain = new URL(supabaseProjectUrl).hostname;
+    const audioUrlParsed = new URL(audioUrl);
+
+    if (!audioUrlParsed.hostname.endsWith(supabaseDomain)) {
+      return Response.json(
+        { error: 'Invalid audio URL: must be from Supabase Storage' },
         { status: 400 }
       );
     }
@@ -29,8 +49,9 @@ export async function POST(request: Request) {
     // Get audio as blob
     const audioBlob = await audioResponse.blob();
 
-    // Create File object for Whisper API
-    const audioFile = new File([audioBlob], 'recording.m4a', { type: 'audio/m4a' });
+    // Convert Blob to File using OpenAI SDK's toFile helper
+    // This works in both Node.js and Edge runtime
+    const audioFile = await toFile(audioBlob, 'recording.m4a', { type: 'audio/m4a' });
 
     // Call Whisper API
     const transcription = await openai.audio.transcriptions.create({

@@ -5,6 +5,7 @@
 
 import { supabase } from '../supabase';
 import * as FileSystem from 'expo-file-system/legacy';
+import { decode } from 'base64-arraybuffer';
 
 const AUDIO_BUCKET = 'checkin-audio';
 
@@ -32,13 +33,8 @@ export async function uploadAudioFile(
       encoding: 'base64',
     });
 
-    // Convert base64 to ArrayBuffer
-    const binaryString = atob(base64Audio);
-    const bytes = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
-    const arrayBuffer = bytes.buffer;
+    // Convert base64 to ArrayBuffer using base64-arraybuffer
+    const arrayBuffer = decode(base64Audio);
 
     // Upload to Supabase Storage
     const { data, error } = await supabase.storage
