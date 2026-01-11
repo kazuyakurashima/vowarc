@@ -5,7 +5,6 @@ import { TextInput } from '@/components/ui/TextInput';
 import { Button } from '@/components/ui/Button';
 import { MirrorFeedbackDisplay } from '@/components/checkin/MirrorFeedbackDisplay';
 import { IfThenQuestion } from '@/components/checkin/IfThenQuestion';
-import { useAuth } from '@/hooks/use-auth';
 import { useHomeData } from '@/hooks/data/useHomeData';
 import { supabase } from '@/lib/supabase';
 import { MirrorFeedback } from '@/lib/supabase/types';
@@ -16,8 +15,7 @@ type Step = 'input' | 'feedback' | 'ifthen' | 'complete';
 
 export default function TextCheckinScreen() {
   const router = useRouter();
-  const { user } = useAuth();
-  const { vow, meaningStatement } = useHomeData();
+  const { user, vow, meaningStatement } = useHomeData();
 
   const [step, setStep] = useState<Step>('input');
   const [checkinText, setCheckinText] = useState('');
