@@ -38,6 +38,13 @@ export interface MeaningStatement {
   is_current: boolean;
 }
 
+export interface MirrorFeedback {
+  observed_change: string;
+  hypothesis: string;
+  next_experiment: string;
+  evidence_links: string[]; // Evidence IDs
+}
+
 export interface Checkin {
   id: string;
   user_id: string;
@@ -47,6 +54,7 @@ export interface Checkin {
   audio_url: string | null;
   mood: number | null; // Nullable: 1-5 scale
   if_then_triggered: boolean | null; // If-Then execution tracking (ticket 004)
+  mirror_feedback: MirrorFeedback | null; // AI-generated Mirror Feedback (ticket 003)
   created_at: string;
 }
 
@@ -77,5 +85,72 @@ export interface UserInterventionSettings {
   intervene_areas: string[];
   no_touch_areas: string[];
   updated_at: string;
+  created_at: string;
+}
+
+// Memory System Types (Ticket 006)
+
+export type MemoryType = 'short_term' | 'milestone';
+export type SourceType = 'checkin' | 'evidence' | 'manual';
+export type DeletionType = 'user' | 'admin' | 'expired';
+export type DeletionRequestStatus = 'pending' | 'approved' | 'rejected';
+
+export interface Memory {
+  id: string;
+  user_id: string;
+  content: string;
+  memory_type: MemoryType;
+  source_type: SourceType;
+  source_id: string | null;
+  is_immutable: boolean;
+  immutable_at: string | null;
+  extracted_at: string;
+  expires_at: string | null;
+  tags: string[];
+  confidence_score: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MemoryVersion {
+  id: string;
+  memory_id: string;
+  content: string;
+  version_number: number;
+  changed_by: string;
+  change_reason: string | null;
+  created_at: string;
+}
+
+export interface Tombstone {
+  id: string;
+  memory_id: string;
+  user_id: string;
+  content: string;
+  deletion_type: DeletionType;
+  deleted_at: string;
+  deleted_by: string | null;
+  deletion_reason: string | null;
+}
+
+export interface DeletionRequest {
+  id: string;
+  memory_id: string;
+  user_id: string;
+  reason: string;
+  status: DeletionRequestStatus;
+  reviewed_by: string | null;
+  reviewed_at: string | null;
+  admin_notes: string | null;
+  created_at: string;
+}
+
+export interface AuditLog {
+  id: string;
+  user_id: string;
+  action: string;
+  target_type: string;
+  target_id: string;
+  metadata: Record<string, any>;
   created_at: string;
 }

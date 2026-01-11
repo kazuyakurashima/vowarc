@@ -10,6 +10,10 @@ export type PhaseType = 'day0' | 'trial' | 'paid' | 'completed' | 'terminated';
 export type CheckinType = 'morning' | 'evening' | 'voice';
 export type CommitmentType = 'daily' | 'weekly' | 'milestone';
 export type CommitmentStatus = 'pending' | 'completed' | 'failed';
+export type MemoryType = 'short_term' | 'milestone';
+export type SourceType = 'checkin' | 'evidence' | 'manual';
+export type DeletionType = 'user' | 'admin' | 'expired';
+export type DeletionRequestStatus = 'pending' | 'approved' | 'rejected';
 
 export interface Database {
   public: {
@@ -102,6 +106,7 @@ export interface Database {
           audio_url: string | null;
           mood: number | null;
           if_then_triggered: boolean | null;
+          mirror_feedback: Json | null;
           created_at: string;
         };
         Insert: {
@@ -113,6 +118,7 @@ export interface Database {
           audio_url?: string | null;
           mood?: number | null;
           if_then_triggered?: boolean | null;
+          mirror_feedback?: Json | null;
           created_at?: string;
         };
         Update: {
@@ -124,6 +130,7 @@ export interface Database {
           audio_url?: string | null;
           mood?: number | null;
           if_then_triggered?: boolean | null;
+          mirror_feedback?: Json | null;
           created_at?: string;
         };
       };
@@ -211,6 +218,181 @@ export interface Database {
           intervene_areas?: Json;
           no_touch_areas?: Json;
           updated_at?: string;
+          created_at?: string;
+        };
+      };
+      memories: {
+        Row: {
+          id: string;
+          user_id: string;
+          content: string;
+          memory_type: MemoryType;
+          source_type: SourceType;
+          source_id: string | null;
+          is_immutable: boolean;
+          immutable_at: string | null;
+          extracted_at: string;
+          expires_at: string | null;
+          tags: Json;
+          confidence_score: number | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          content: string;
+          memory_type: MemoryType;
+          source_type: SourceType;
+          source_id?: string | null;
+          is_immutable?: boolean;
+          immutable_at?: string | null;
+          extracted_at?: string;
+          expires_at?: string | null;
+          tags?: Json;
+          confidence_score?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          content?: string;
+          memory_type?: MemoryType;
+          source_type?: SourceType;
+          source_id?: string | null;
+          is_immutable?: boolean;
+          immutable_at?: string | null;
+          extracted_at?: string;
+          expires_at?: string | null;
+          tags?: Json;
+          confidence_score?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      memory_versions: {
+        Row: {
+          id: string;
+          memory_id: string;
+          content: string;
+          version_number: number;
+          changed_by: string;
+          change_reason: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          memory_id: string;
+          content: string;
+          version_number: number;
+          changed_by: string;
+          change_reason?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          memory_id?: string;
+          content?: string;
+          version_number?: number;
+          changed_by?: string;
+          change_reason?: string | null;
+          created_at?: string;
+        };
+      };
+      tombstones: {
+        Row: {
+          id: string;
+          memory_id: string;
+          user_id: string;
+          content: string;
+          deletion_type: DeletionType;
+          deleted_at: string;
+          deleted_by: string | null;
+          deletion_reason: string | null;
+        };
+        Insert: {
+          id?: string;
+          memory_id: string;
+          user_id: string;
+          content: string;
+          deletion_type: DeletionType;
+          deleted_at?: string;
+          deleted_by?: string | null;
+          deletion_reason?: string | null;
+        };
+        Update: {
+          id?: string;
+          memory_id?: string;
+          user_id?: string;
+          content?: string;
+          deletion_type?: DeletionType;
+          deleted_at?: string;
+          deleted_by?: string | null;
+          deletion_reason?: string | null;
+        };
+      };
+      deletion_requests: {
+        Row: {
+          id: string;
+          memory_id: string;
+          user_id: string;
+          reason: string;
+          status: DeletionRequestStatus;
+          reviewed_by: string | null;
+          reviewed_at: string | null;
+          admin_notes: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          memory_id: string;
+          user_id: string;
+          reason: string;
+          status?: DeletionRequestStatus;
+          reviewed_by?: string | null;
+          reviewed_at?: string | null;
+          admin_notes?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          memory_id?: string;
+          user_id?: string;
+          reason?: string;
+          status?: DeletionRequestStatus;
+          reviewed_by?: string | null;
+          reviewed_at?: string | null;
+          admin_notes?: string | null;
+          created_at?: string;
+        };
+      };
+      audit_logs: {
+        Row: {
+          id: string;
+          user_id: string;
+          action: string;
+          target_type: string;
+          target_id: string;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          action: string;
+          target_type: string;
+          target_id: string;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          action?: string;
+          target_type?: string;
+          target_id?: string;
+          metadata?: Json;
           created_at?: string;
         };
       };

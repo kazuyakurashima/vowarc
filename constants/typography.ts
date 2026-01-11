@@ -31,9 +31,12 @@ export const typography = {
 export const fontSizes = {
   xs: 12,
   sm: 14,
+  md: 16,
   base: 16,
   lg: 18,
   xl: 20,
+  xxl: 24,
+  xxxl: 32,
   '2xl': 24,
   '3xl': 30,
 } as const;

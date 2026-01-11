@@ -30,10 +30,13 @@ export const fontSizes = {
   xs: 12,
   sm: 14,
   md: 16,
-  lg: 20,
-  xl: 24,
-  xxl: 32,
-  xxxl: 40,
+  base: 16, // Alias for md, for backward compatibility
+  lg: 18,
+  xl: 20,
+  xxl: 24,
+  xxxl: 32,
+  '2xl': 24, // Alias for xxl
+  '3xl': 30,
 } as const;
 
 /**

@@ -348,17 +348,17 @@ async function expireOldMemories() {
 ## Todo
 
 ### データモデル
-- [ ] memories テーブル作成
-- [ ] memory_versions テーブル作成
-- [ ] tombstones テーブル作成
-- [ ] deletion_requests テーブル作成 ← 追加
-- [ ] audit_logs テーブル作成 ← 追加
-- [ ] RLS設定（管理者権限設定含む）
+- [x] memories テーブル作成
+- [x] memory_versions テーブル作成
+- [x] tombstones テーブル作成
+- [x] deletion_requests テーブル作成 ← 追加
+- [x] audit_logs テーブル作成 ← 追加
+- [x] RLS設定（管理者権限設定含む）
 
 ### 記憶抽出
-- [ ] チェックインからの自動抽出ロジック
-- [ ] 要約生成プロンプト作成
-- [ ] 感情スコア分析
+- [x] チェックインからの自動抽出ロジック
+- [x] 要約生成プロンプト作成
+- [x] 感情スコア分析
 
 ### API実装
 - [ ] GET /api/memories
@@ -394,3 +394,12 @@ async function expireOldMemories() {
 6. ユーザーが記憶を閲覧できる
 7. **管理者が法的/医療的理由で記憶を削除できる** ← 追加
 8. **削除時にTombstoneと監査ログが生成される** ← 追加
+
+### データHooks（実装済み）
+- [x] useMemories hook作成（Supabase SDK直接使用）
+- [x] useMemoriesByType hook作成
+
+### メモ
+- API実装は直接Supabase SDKを使用する方針に変更（RLS-safe）
+- POST /api/memories/extract のみサーバーサイドAPI（OpenAI呼び出しのため）
+- 管理者向け削除機能はPhase Bで実装予定
