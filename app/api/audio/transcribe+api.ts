@@ -21,18 +21,37 @@ export async function POST(request: Request) {
     // SSRF Protection: Validate URL is from Supabase Storage
     const supabaseProjectUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
     if (!supabaseProjectUrl) {
+      console.error('EXPO_PUBLIC_SUPABASE_URL is not configured in API runtime');
       return Response.json(
-        { error: 'Server configuration error' },
+        {
+          error: 'Server configuration error',
+          message: 'EXPO_PUBLIC_SUPABASE_URL environment variable is not set',
+        },
         { status: 500 }
       );
     }
 
-    const supabaseDomain = new URL(supabaseProjectUrl).hostname;
-    const audioUrlParsed = new URL(audioUrl);
+    let supabaseDomain: string;
+    let audioUrlParsed: URL;
+
+    try {
+      supabaseDomain = new URL(supabaseProjectUrl).hostname;
+      audioUrlParsed = new URL(audioUrl);
+    } catch (error) {
+      console.error('Invalid URL format:', error);
+      return Response.json(
+        { error: 'Invalid URL format' },
+        { status: 400 }
+      );
+    }
 
     if (!audioUrlParsed.hostname.endsWith(supabaseDomain)) {
+      console.warn('SSRF attempt detected:', { audioUrl, supabaseDomain });
       return Response.json(
-        { error: 'Invalid audio URL: must be from Supabase Storage' },
+        {
+          error: 'Invalid audio URL: must be from Supabase Storage',
+          expected_domain: supabaseDomain,
+        },
         { status: 400 }
       );
     }
