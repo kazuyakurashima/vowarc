@@ -57,7 +57,7 @@ export default function EvidenceScreen() {
 
       {item.type === 'url' && item.content && (
         <TouchableOpacity
-          onPress={() => Linking.openURL(item.content!)}
+          onPress={() => openUrl(item.content!)}
           style={styles.evidenceUrlContainer}
         >
           <Text style={styles.evidenceUrl} numberOfLines={1}>
@@ -163,6 +163,30 @@ function formatDate(dateString: string): string {
   const day = date.getDate();
 
   return `📅 ${year}年${month}月${day}日`;
+}
+
+/**
+ * Safely open URL, adding https:// if protocol is missing
+ */
+async function openUrl(url: string): Promise<void> {
+  let finalUrl = url.trim();
+
+  // Add https:// if no protocol specified
+  if (!finalUrl.match(/^[a-zA-Z]+:\/\//)) {
+    finalUrl = `https://${finalUrl}`;
+  }
+
+  try {
+    const canOpen = await Linking.canOpenURL(finalUrl);
+    if (canOpen) {
+      await Linking.openURL(finalUrl);
+    } else {
+      console.error('Cannot open URL:', finalUrl);
+      // Could show Alert here, but avoiding Alert import for now
+    }
+  } catch (error) {
+    console.error('Error opening URL:', error);
+  }
 }
 
 const styles = StyleSheet.create({
