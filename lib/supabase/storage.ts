@@ -39,7 +39,7 @@ export async function uploadEvidenceImage(
 
     // Read compressed file as base64
     const base64 = await FileSystem.readAsStringAsync(compressedUri, {
-      encoding: FileSystem.EncodingType.Base64,
+      encoding: 'base64',
     });
 
     // Check file size (base64 is ~33% larger than binary)
@@ -53,8 +53,8 @@ export async function uploadEvidenceImage(
     // Convert base64 to ArrayBuffer
     const arrayBuffer = decode(base64);
 
-    // Determine content type
-    const contentType = getContentType(extension);
+    // Always JPEG after compression
+    const contentType = 'image/jpeg';
 
     // Upload to Supabase Storage
     const { data, error } = await supabase.storage
