@@ -54,7 +54,23 @@ export function CreateEvidenceForm({ onSuccess, onCancel }: CreateEvidenceFormPr
     }
 
     if (!isFormValid()) {
-      Alert.alert('エラー', 'すべての項目を入力してください');
+      // Show specific validation message
+      if (!title.trim()) {
+        Alert.alert('エラー', 'タイトルを入力してください');
+        return;
+      }
+      if (selectedType === 'image' && !imageUri) {
+        Alert.alert('エラー', '画像を選択してください');
+        return;
+      }
+      if (selectedType === 'url' && !content.trim()) {
+        Alert.alert('エラー', 'URLを入力してください');
+        return;
+      }
+      if (selectedType === 'note' && !content.trim()) {
+        Alert.alert('エラー', 'メモの内容を入力してください');
+        return;
+      }
       return;
     }
 
@@ -190,6 +206,18 @@ export function CreateEvidenceForm({ onSuccess, onCancel }: CreateEvidenceFormPr
         />
       )}
 
+      {/* Validation hint */}
+      {!isFormValid() && (
+        <View style={styles.validationHint}>
+          <Text style={styles.validationText}>
+            {!title.trim() && '• タイトルを入力してください\n'}
+            {selectedType === 'image' && !imageUri && '• 画像を選択してください\n'}
+            {selectedType === 'url' && !content.trim() && '• URLを入力してください\n'}
+            {selectedType === 'note' && !content.trim() && '• メモの内容を入力してください'}
+          </Text>
+        </View>
+      )}
+
       {/* Action buttons */}
       <View style={styles.actions}>
         <Button
@@ -285,6 +313,20 @@ const styles = StyleSheet.create({
   noteInput: {
     minHeight: 120,
     textAlignVertical: 'top',
+  },
+  validationHint: {
+    marginTop: spacing.md,
+    padding: spacing.md,
+    backgroundColor: colors.error + '20',
+    borderRadius: 8,
+    borderLeftWidth: 3,
+    borderLeftColor: colors.error,
+  },
+  validationText: {
+    fontFamily: typography.body.fontFamily,
+    fontSize: fontSizes.sm,
+    color: colors.error,
+    lineHeight: fontSizes.sm * 1.5,
   },
   actions: {
     flexDirection: 'row',
