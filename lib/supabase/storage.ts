@@ -110,24 +110,6 @@ export async function deleteEvidenceImage(fileUrl: string): Promise<void> {
 }
 
 /**
- * Get content type from file extension
- */
-function getContentType(extension: string): string {
-  const ext = extension.toLowerCase();
-  const mimeTypes: Record<string, string> = {
-    jpg: 'image/jpeg',
-    jpeg: 'image/jpeg',
-    png: 'image/png',
-    gif: 'image/gif',
-    webp: 'image/webp',
-    heic: 'image/heic',
-    heif: 'image/heif',
-  };
-
-  return mimeTypes[ext] || 'application/octet-stream';
-}
-
-/**
  * Compress and resize image before upload
  *
  * @param uri - Local file URI

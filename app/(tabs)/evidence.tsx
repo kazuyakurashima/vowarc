@@ -14,6 +14,7 @@ import {
   Modal,
   Linking,
   RefreshControl,
+  Alert,
 } from 'react-native';
 import { useAuth } from '@/hooks/auth';
 import { useEvidences } from '@/hooks/data/useEvidences';
@@ -182,10 +183,17 @@ async function openUrl(url: string): Promise<void> {
       await Linking.openURL(finalUrl);
     } else {
       console.error('Cannot open URL:', finalUrl);
-      // Could show Alert here, but avoiding Alert import for now
+      Alert.alert(
+        'URLを開けません',
+        `このURLを開くことができませんでした:\n${url}`
+      );
     }
   } catch (error) {
     console.error('Error opening URL:', error);
+    Alert.alert(
+      'エラー',
+      'URLを開く際にエラーが発生しました。URLが正しいか確認してください。'
+    );
   }
 }
 
