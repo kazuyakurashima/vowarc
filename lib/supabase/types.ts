@@ -154,3 +154,37 @@ export interface AuditLog {
   metadata: Record<string, any>;
   created_at: string;
 }
+
+// ============================================
+// Evidence Types (Ticket 009)
+// ============================================
+
+export type EvidenceType = 'image' | 'url' | 'note';
+
+export interface Evidence {
+  id: string;
+  user_id: string;
+  type: EvidenceType;
+  title: string;
+  content: string | null; // URL or note content
+  file_url: string | null; // Supabase Storage URL for images
+  date: string; // ISO date string (YYYY-MM-DD)
+  ai_highlight_score: number | null; // 0.00-1.00 for Day21 selection
+  created_at: string;
+  updated_at: string;
+}
+
+export interface EvidenceInsert {
+  user_id: string;
+  type: EvidenceType;
+  title: string;
+  content?: string | null;
+  file_url?: string | null;
+  date?: string;
+}
+
+export interface EvidenceUpdate {
+  title?: string;
+  content?: string | null;
+  ai_highlight_score?: number | null;
+}

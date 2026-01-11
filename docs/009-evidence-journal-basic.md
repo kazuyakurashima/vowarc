@@ -214,29 +214,35 @@ async function uploadEvidence(
 ## Todo
 
 ### データモデル
-- [ ] evidences テーブル作成
-- [ ] RLS設定
-- [ ] Supabase Storage バケット作成
+- [x] evidences テーブル作成
+- [x] RLS設定
+- [x] Supabase Storage バケット作成（手動作業必要）
 
 ### 基本機能
-- [ ] Evidence追加モーダル
-- [ ] 画像アップロード機能
-- [ ] URL保存機能
-- [ ] メモ保存機能
+- [x] Evidence追加モーダル
+- [x] 画像アップロード機能
+- [x] URL保存機能
+- [x] メモ保存機能
 
 ### 一覧表示
-- [ ] Evidence一覧画面
-- [ ] 日付順ソート
-- [ ] サムネイル表示
+- [x] Evidence一覧画面
+- [x] 日付順ソート
+- [x] サムネイル表示
 
 ### API実装
-- [ ] GET /api/evidences
-- [ ] POST /api/evidences
-- [ ] GET /api/evidences/highlights
+- [x] GET /api/evidences（直接Supabase SDK使用）
+- [x] POST /api/evidences（直接Supabase SDK使用）
+- [x] POST /api/evidences/analyze（AIスコアリング）
 
 ### Day21連携
-- [ ] ハイライト選定ロジック（AI）
-- [ ] Commitment Reportへの表示
+- [x] ハイライト選定ロジック（AI）
+- [ ] Commitment Reportへの表示（Ticket 007で実装）
+
+### 実装メモ
+- API実装は直接Supabase SDKを使用する方針（RLS-safe）
+- POST /api/evidences/analyze のみサーバーサイドAPI（OpenAI呼び出しのため）
+- 画像アップロードは expo-image-picker + Supabase Storage
+- リアルタイム更新はSupabase Real-time Subscriptionで実装
 
 ---
 

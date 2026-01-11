@@ -396,6 +396,44 @@ export interface Database {
           created_at?: string;
         };
       };
+      evidences: {
+        Row: {
+          id: string;
+          user_id: string;
+          type: 'image' | 'url' | 'note';
+          title: string;
+          content: string | null;
+          file_url: string | null;
+          date: string;
+          ai_highlight_score: number | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          type: 'image' | 'url' | 'note';
+          title: string;
+          content?: string | null;
+          file_url?: string | null;
+          date?: string;
+          ai_highlight_score?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          type?: 'image' | 'url' | 'note';
+          title?: string;
+          content?: string | null;
+          file_url?: string | null;
+          date?: string;
+          ai_highlight_score?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
     };
     Views: {
       [_ in never]: never;
