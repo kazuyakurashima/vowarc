@@ -24,10 +24,23 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="evidence"
+        options={{
+          title: 'Evidence',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="camera.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="explore"
         options={{
           title: 'Explore',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="checkin-text"
+        options={{
+          href: null, // Hide from tab bar
         }}
       />
     </Tabs>
