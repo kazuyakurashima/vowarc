@@ -3,7 +3,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase';
 import { Evidence, EvidenceInsert, EvidenceUpdate } from '@/lib/supabase/types';
 
 /**

@@ -3,7 +3,7 @@
  * Handles image uploads for Evidence Journal
  */
 
-import { supabase } from './client';
+import { supabase } from '../supabase';
 import * as FileSystem from 'expo-file-system';
 import { decode } from 'base64-arraybuffer';
 
