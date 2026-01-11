@@ -59,12 +59,20 @@ export function CreateEvidenceForm({ onSuccess, onCancel }: CreateEvidenceFormPr
   };
 
   const handleSubmit = async () => {
+    console.log('[FORM] Submit clicked');
+    console.log('[FORM] User:', user?.id);
+    console.log('[FORM] Validation:', isFormValid());
+    console.log('[FORM] Type:', selectedType);
+    console.log('[FORM] Title:', title);
+    console.log('[FORM] ImageUri:', imageUri);
+
     if (!user) {
       Alert.alert('エラー', 'ユーザー情報が見つかりません');
       return;
     }
 
     if (!isFormValid()) {
+      console.log('[FORM] Validation failed');
       // Show specific validation message
       if (!title.trim()) {
         Alert.alert('エラー', 'タイトルを入力してください');
@@ -86,16 +94,20 @@ export function CreateEvidenceForm({ onSuccess, onCancel }: CreateEvidenceFormPr
     }
 
     try {
+      console.log('[FORM] Setting uploading to true');
       setUploading(true);
 
       let fileUrl: string | null = null;
 
       // Upload image if type is 'image'
       if (selectedType === 'image' && imageUri) {
+        console.log('[FORM] Starting image upload...');
         fileUrl = await uploadEvidenceImage(user.id, imageUri);
+        console.log('[FORM] Image upload complete:', fileUrl);
       }
 
       // Create evidence record
+      console.log('[FORM] Creating evidence record...');
       const evidence = await createEvidence({
         user_id: user.id,
         type: selectedType,
@@ -106,15 +118,20 @@ export function CreateEvidenceForm({ onSuccess, onCancel }: CreateEvidenceFormPr
       });
 
       if (evidence) {
+        console.log('[FORM] Evidence created successfully:', evidence.id);
         Alert.alert('成功', 'エビデンスを追加しました');
         onSuccess();
       } else {
+        console.log('[FORM] Evidence creation returned null');
         Alert.alert('エラー', 'エビデンスの追加に失敗しました');
       }
     } catch (error) {
-      console.error('Error creating evidence:', error);
+      console.error('[FORM] ERROR:', error);
+      console.error('[FORM] Error type:', typeof error);
+      console.error('[FORM] Error keys:', error ? Object.keys(error) : 'null');
       Alert.alert('エラー', error instanceof Error ? error.message : 'エビデンスの追加に失敗しました');
     } finally {
+      console.log('[FORM] Setting uploading to false');
       setUploading(false);
     }
   };

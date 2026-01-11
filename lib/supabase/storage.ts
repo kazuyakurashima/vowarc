@@ -28,54 +28,65 @@ export async function uploadEvidenceImage(
 ): Promise<string> {
   try {
     // Compress image first
-    console.log('Compressing image...');
+    console.log('[UPLOAD] Starting compression for:', uri);
     const compressedUri = await compressImage(uri);
-    console.log('Image compressed:', compressedUri);
+    console.log('[UPLOAD] Compression complete:', compressedUri);
 
     // Generate filename if not provided
     const timestamp = Date.now();
     const finalFilename = filename || `${timestamp}.jpg`; // Always use .jpg after compression
     const filePath = `${userId}/${finalFilename}`;
+    console.log('[UPLOAD] Will upload to:', filePath);
 
     // Read compressed file as base64
+    console.log('[UPLOAD] Reading file as base64...');
     const base64 = await FileSystem.readAsStringAsync(compressedUri, {
       encoding: 'base64',
     });
+    console.log('[UPLOAD] Base64 read complete, length:', base64.length);
 
     // Check file size (base64 is ~33% larger than binary)
     const estimatedSize = (base64.length * 3) / 4;
-    console.log('Compressed file size:', (estimatedSize / 1024 / 1024).toFixed(2), 'MB');
+    console.log('[UPLOAD] Estimated file size:', (estimatedSize / 1024 / 1024).toFixed(2), 'MB');
 
     if (estimatedSize > MAX_FILE_SIZE) {
       throw new Error(`画像が大きすぎます（圧縮後: ${(estimatedSize / 1024 / 1024).toFixed(1)}MB）。\nより小さい画像を選択してください。`);
     }
 
     // Convert base64 to ArrayBuffer
+    console.log('[UPLOAD] Converting base64 to ArrayBuffer...');
     const arrayBuffer = decode(base64);
+    console.log('[UPLOAD] ArrayBuffer created, byteLength:', arrayBuffer.byteLength);
 
     // Always JPEG after compression
     const contentType = 'image/jpeg';
 
     // Upload to Supabase Storage
+    console.log('[UPLOAD] Uploading to Supabase Storage...');
     const { data, error } = await supabase.storage
       .from(EVIDENCE_BUCKET)
       .upload(filePath, arrayBuffer, {
         contentType,
         upsert: false, // Don't overwrite existing files
       });
+    console.log('[UPLOAD] Upload response:', { data, error });
 
     if (error) {
+      console.error('[UPLOAD] Upload failed:', error);
       throw new Error(`画像のアップロードに失敗しました: ${error.message}`);
     }
 
     // Get public URL
+    console.log('[UPLOAD] Getting public URL...');
     const { data: urlData } = supabase.storage
       .from(EVIDENCE_BUCKET)
       .getPublicUrl(filePath);
+    console.log('[UPLOAD] Success! Public URL:', urlData.publicUrl);
 
     return urlData.publicUrl;
   } catch (error) {
-    console.error('Error uploading evidence image:', error);
+    console.error('[UPLOAD] ERROR:', error);
+    console.error('[UPLOAD] Error stack:', error instanceof Error ? error.stack : 'No stack');
     throw error;
   }
 }
@@ -137,6 +148,7 @@ function getContentType(extension: string): string {
  */
 export async function compressImage(uri: string): Promise<string> {
   try {
+    console.log('[COMPRESS] Starting compression for:', uri);
     // Compress and resize image
     const result = await ImageManipulator.manipulateAsync(
       uri,
@@ -153,10 +165,12 @@ export async function compressImage(uri: string): Promise<string> {
         format: ImageManipulator.SaveFormat.JPEG,
       }
     );
+    console.log('[COMPRESS] Compression successful:', result.uri);
 
     return result.uri;
   } catch (error) {
-    console.error('Error compressing image:', error);
+    console.error('[COMPRESS] ERROR:', error);
+    console.error('[COMPRESS] Fallback to original URI');
     // Return original URI if compression fails
     return uri;
   }
