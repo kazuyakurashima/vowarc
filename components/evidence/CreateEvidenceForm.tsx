@@ -38,13 +38,24 @@ export function CreateEvidenceForm({ onSuccess, onCancel }: CreateEvidenceFormPr
   const [uploading, setUploading] = useState(false);
 
   const isFormValid = () => {
-    if (!title.trim()) return false;
+    const hasTitle = !!title.trim();
+    const hasImage = selectedType !== 'image' || !!imageUri;
+    const hasContent = selectedType === 'image' || !!content.trim();
 
-    if (selectedType === 'image' && !imageUri) return false;
-    if (selectedType === 'url' && !content.trim()) return false;
-    if (selectedType === 'note' && !content.trim()) return false;
+    const isValid = hasTitle && hasImage && hasContent;
 
-    return true;
+    // Debug log
+    console.log('Form validation:', {
+      selectedType,
+      hasTitle,
+      title: title.substring(0, 20),
+      hasImage,
+      imageUri: imageUri ? 'present' : 'null',
+      hasContent,
+      isValid,
+    });
+
+    return isValid;
   };
 
   const handleSubmit = async () => {
@@ -109,6 +120,15 @@ export function CreateEvidenceForm({ onSuccess, onCancel }: CreateEvidenceFormPr
   };
 
   const loading = creating || uploading;
+
+  // Debug: Log button state
+  console.log('Button state:', {
+    loading,
+    creating,
+    uploading,
+    isFormValid: isFormValid(),
+    buttonDisabled: !isFormValid() || loading,
+  });
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
