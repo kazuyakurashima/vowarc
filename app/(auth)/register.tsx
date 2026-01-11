@@ -33,7 +33,16 @@ export default function RegisterScreen() {
       // After successful registration, go to onboarding
       router.replace('/(onboarding)');
     } catch (err) {
-      setError(err instanceof Error ? err.message : '登録に失敗しました');
+      // Supabaseエラーメッセージを日本語化
+      const errorMessage = err instanceof Error ? err.message : '登録に失敗しました';
+
+      if (errorMessage.includes('already registered') || errorMessage.includes('already exists')) {
+        setError('このメールアドレスは既に登録されています');
+      } else if (errorMessage.includes('invalid email')) {
+        setError('有効なメールアドレスを入力してください');
+      } else {
+        setError(errorMessage);
+      }
     } finally {
       setLoading(false);
     }

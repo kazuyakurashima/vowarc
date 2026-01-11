@@ -20,7 +20,16 @@ export default function LoginScreen() {
       await signIn(email, password);
       router.replace('/(tabs)');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'ログインに失敗しました');
+      // Supabaseエラーメッセージを日本語化
+      const errorMessage = err instanceof Error ? err.message : 'ログインに失敗しました';
+
+      if (errorMessage.includes('Email not confirmed')) {
+        setError('メールアドレスが未確認です。\n開発中の場合はSupabase Dashboardで「Enable email confirmations」をオフにしてください。');
+      } else if (errorMessage.includes('Invalid login credentials')) {
+        setError('メールアドレスまたはパスワードが正しくありません');
+      } else {
+        setError(errorMessage);
+      }
     } finally {
       setLoading(false);
     }
