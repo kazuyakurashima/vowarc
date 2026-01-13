@@ -15,7 +15,7 @@ CREATE TABLE memories (
   source_id UUID, -- Reference to checkin or evidence
 
   -- Mutability control
-  is_immutable BOOLEAN DEFAULT FALSE, -- TRUE for milestones after 24h
+  is_immutable BOOLEAN DEFAULT FALSE, -- TRUE for milestones after 24h (on UPDATE)
   immutable_at TIMESTAMP, -- When became immutable
 
   -- Lifecycle

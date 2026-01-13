@@ -405,7 +405,7 @@ CREATE TABLE onboarding_answers (
 
 ---
 
-### Low: Input Type精度向上（Phase B）
+### Low 1: Input Type精度向上（Phase B）
 
 **問題点:**
 - 音声入力後にテキスト編集した場合も`input_type='voice'`のまま
@@ -418,6 +418,30 @@ CREATE TABLE onboarding_answers (
 **実装タイミング**: Phase B（analytics強化時）
 
 **依存関係**: なし（現状でも機能は問題なく動作）
+
+---
+
+### Low 2: VoiceInput中断時の孤立ファイル（Phase B）
+
+**問題点:**
+- VoiceInputは録音停止→Storageアップロード→文字起こし→確認の順
+- ユーザーが「やり直し」を押した場合、既にアップロードされた音声ファイルがStorageに残る
+- 確定時のみ`audio_url`が保存されるため、中断時のファイルはDB参照なしで孤立
+
+**影響範囲:**
+- MVPではStorageコストは許容範囲（数MB/ユーザー程度）
+- 機能的な不具合なし（孤立ファイルは表示されない）
+
+**改善案:**
+- 案A: handleRetry時に前回アップロードファイルを削除（実装複雑）
+- 案B: 定期クリーンアップJob（未参照ファイルを7日後削除）
+- 案C: 現状維持＋ユーザーあたりStorage quota設定
+
+**推奨**: 案B（定期クリーンアップJob）- 運用でカバー可能
+
+**実装タイミング**: Phase B（Storage使用量が問題になった時）
+
+**依存関係**: なし（MVPでは実用上の問題なし）
 
 ---
 

@@ -141,7 +141,7 @@ export async function POST(request: Request) {
           confidence_score: ap.confidence,
           source_type: 'manual' as const, // Onboarding is closest to manual input
           tags: ['anti_pattern'], // Tag for categorization
-          is_immutable: false, // Mutable initially, becomes immutable after 24h
+          is_immutable: false, // Mutable initially, becomes immutable after 24h (on UPDATE)
         }));
 
         const { error: memoryError } = await serverClient
