@@ -276,31 +276,79 @@ Day 21の選択を記録
 ## Todo
 
 ### レポート生成
-- [ ] 各種メトリクス計算ロジック
-- [ ] ティア判定ロジック
-- [ ] 踏みとどまり回数計算
-- [ ] AIによるPotential Statement生成
-- [ ] Tough Love予兆テキスト生成
+- [x] 各種メトリクス計算ロジック（Ticket 010 Small Wins を再利用）
+- [x] ティア判定ロジック（Ticket 010 Small Wins を再利用）
+- [x] 踏みとどまり回数計算（If-Then + 復帰 + 粘り）
+- [x] AIによるPotential Statement生成
+- [x] Tough Love予兆テキスト生成
 
 ### 画面実装
-- [ ] intro.tsx - 静かな導入
-- [ ] report.tsx - Commitment Report
-- [ ] vow-update.tsx - 誓い更新
-- [ ] tough-love.tsx - 介入合意
-- [ ] re-sign.tsx - 再署名
-- [ ] choice.tsx - 継続/停止選択
+- [x] intro.tsx - 静かな導入
+- [x] report.tsx - Commitment Report
+- [x] vow-update.tsx - 誓い更新
+- [x] tough-love.tsx - 介入合意
+- [x] re-sign.tsx - 再署名
+- [x] choice.tsx - 継続/停止選択
 
 ### UI/UX
-- [ ] メトリクス表示コンポーネント
-- [ ] ティア表示カード
-- [ ] 誓い編集フォーム
-- [ ] 介入設定スライダー
-- [ ] 署名コンポーネント
+- [x] メトリクス表示コンポーネント（ProgressBar）
+- [x] ティア表示カード（TierBadge）
+- [x] 誓い編集フォーム
+- [x] 介入設定チェックボックス
+- [x] 署名コンポーネント（PanResponder）
 
 ### API実装
-- [ ] GET /api/day21/report
-- [ ] POST /api/day21/complete
-- [ ] 誓い更新API連携
+- [x] GET /api/day21/report
+- [x] POST /api/day21/complete
+- [x] 誓い更新API連携（complete API内で処理）
+
+**実装完了: 2026-01-13**
+
+---
+
+## 実装ファイル一覧
+
+### サービス
+- `lib/day21/report.ts` - レポート生成ロジック、踏みとどまり計算、AI生成
+
+### API
+- `app/api/day21/report+api.ts` - GET /api/day21/report
+- `app/api/day21/complete+api.ts` - POST /api/day21/complete
+
+### フック
+- `hooks/data/useDay21Report.ts` - Day21レポートデータフック
+
+### 画面
+- `app/(day21)/_layout.tsx` - Day21フロー用レイアウト
+- `app/(day21)/intro.tsx` - 静かな導入
+- `app/(day21)/report.tsx` - Commitment Report
+- `app/(day21)/vow-update.tsx` - 誓い更新
+- `app/(day21)/tough-love.tsx` - 介入合意
+- `app/(day21)/re-sign.tsx` - 再署名
+- `app/(day21)/choice.tsx` - 継続/停止選択
+
+---
+
+## 既知の制限事項（MVP）
+
+### Day21自動遷移
+- **現行**: 手動で `/day21/intro` に遷移する必要あり
+- **Phase B対応**: ホーム画面でDay >= 21を検知して自動遷移
+
+### 決済連携
+- **現行**: 継続選択後、Alertで仮の成功表示のみ
+- **Phase B対応**: Ticket 008（課金システム）で実装
+
+### Exit Ritual
+- **現行**: 停止選択後、Alertで簡易メッセージのみ
+- **Phase B対応**: Ticket 012（Exit Ritual）で詳細実装
+
+### Day21未到達時のハンドリング
+- **現行**: API は 400 を返し、UIはエラー表示のみ
+- **Phase B対応**: ホーム画面で Day < 21 を検知し、Day21フローへの遷移を防ぐ
+
+### 環境変数
+- `EXPO_PUBLIC_OPENAI_API_KEY` が必須（他のAIサービスと統一）
 
 ---
 

@@ -309,42 +309,86 @@ async function checkContradiction(
 ## Todo
 
 ### プロンプト設計
-- [ ] システムプロンプト作成（矛盾検出指針含む）
-- [ ] ユーザーメッセージテンプレート作成
-- [ ] Mirror Feedback出力形式定義
+- [x] システムプロンプト作成（矛盾検出指針含む）
+- [x] ユーザーメッセージテンプレート作成
+- [x] Mirror Feedback出力形式定義
 
 ### API実装
 - [x] OpenAI SDK導入
-- [ ] /api/chat エンドポイント作成
-- [ ] 応答パース関数実装
+- [x] /api/chat エンドポイント作成
+- [x] 応答パース関数実装
 
 ### コンテキスト構築
-- [ ] 記憶システム連携（006依存）
-- [ ] ユーザー情報取得
-- [ ] 直近7日の履歴取得
-- [ ] Anti-Pattern取得
+- [x] 記憶システム連携（006依存）
+- [x] ユーザー情報取得
+- [x] 直近7日の履歴取得
+- [x] Anti-Pattern取得
 
 ### 矛盾検出（追加）
-- [ ] 矛盾検出ロジック実装
-- [ ] 照合問い生成
-- [ ] 矛盾検出結果の構造化
+- [x] 矛盾検出ロジック実装（AI側で実行）
+- [x] 照合問い生成（システムプロンプトに組み込み）
+- [x] 矛盾検出結果の構造化
 
 ### 介入設定（追加）
 - [x] user_intervention_settings テーブル作成
-- [ ] 介入設定取得API
-- [ ] 介入設定更新API
-- [ ] 介入設定UIコンポーネント
-- [ ] プロンプトへの設定反映
+- [x] 介入設定取得API
+- [x] 介入設定更新API
+- [x] 介入設定UIコンポーネント
+- [x] プロンプトへの設定反映
 
 ### 応答処理
-- [ ] Mirror Feedback形式の表示コンポーネント
-- [ ] If-Then形式のコミットメント抽出
-- [ ] コミットメント追加フロー
+- [x] Mirror Feedback形式の表示コンポーネント（Ticket 003で実装済み）
+- [x] If-Then形式のコミットメント抽出
+- [ ] コミットメント追加フロー（Phase B以降）
 
 ### エラーハンドリング
-- [ ] API失敗時のリトライ
-- [ ] レート制限対応
-- [ ] フォールバック応答
+- [ ] API失敗時のリトライ（Phase B以降）
+- [ ] レート制限対応（Phase B以降）
+- [x] フォールバック応答
+
+---
+
+## 実装ファイル一覧
+
+### AI Coach サービス
+- `lib/openai/coach.ts` - AI Coachサービス（システムプロンプト、矛盾検出、応答パース）
+
+### APIエンドポイント
+- `app/api/chat/+api.ts` - AI Coachチャットエンドポイント
+- `app/api/settings/intervention+api.ts` - 介入設定取得/更新API
+
+### データフック
+- `hooks/data/useInterventionSettings.ts` - 介入設定フック
+
+### UIコンポーネント
+- `components/settings/InterventionSettings.tsx` - 介入設定UI
+
+### 型定義
+- `lib/supabase/types.ts` - `CoachMirrorFeedback`, `IfThenExperiment`, `coachFeedbackToMirrorFeedback()`
+
+---
+
+## 使用上の注意
+
+### Coach応答の型変換
+
+Chat APIは `CoachMirrorFeedback` 形式（`next_experiment` がオブジェクト）で返します。
+既存の `MirrorFeedbackDisplay` コンポーネントや DB 保存には `MirrorFeedback` 形式（`next_experiment` が文字列）が必要です。
+
+```typescript
+import { coachFeedbackToMirrorFeedback, CoachMirrorFeedback } from '@/lib/supabase/types';
+
+// Chat APIからの応答
+const coachResponse: CoachMirrorFeedback = apiResponse.response;
+
+// UI表示・DB保存用に変換
+const mirrorFeedback = coachFeedbackToMirrorFeedback(coachResponse);
+```
+
+### サーバーサイドの「触れない領域」強制
+
+`noTouchAreas` が1つでも設定されている場合、AIの矛盾検出結果はサーバー側で強制的に無効化されます。
+これはAIがプロンプト指示を無視した場合のセーフティネットです。
 
 ---
 

@@ -43,6 +43,18 @@ export default function TabLayout() {
           href: null, // Hide from tab bar
         }}
       />
+      <Tabs.Screen
+        name="checkin-voice"
+        options={{
+          href: null, // Hide from tab bar
+        }}
+      />
+      <Tabs.Screen
+        name="dashboard"
+        options={{
+          href: null, // Hide from tab bar - accessed from home screen
+        }}
+      />
     </Tabs>
   );
 }

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useHomeData } from '@/hooks/data/useHomeData';
 import { Button } from '@/components/ui/Button';
+import { SmallWinsSummary } from '@/components/dashboard/SmallWinsSummary';
 import { colors, spacing, typography, fontSizes } from '@/constants/theme';
 
 export default function HomeScreen() {
@@ -61,6 +62,9 @@ export default function HomeScreen() {
           <Text style={styles.vowText}>{vow.content}</Text>
         </View>
       )}
+
+      {/* Small Wins Summary */}
+      <SmallWinsSummary />
 
       {/* Today's Commitments */}
       <View style={styles.commitmentsContainer}>

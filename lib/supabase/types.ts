@@ -45,6 +45,36 @@ export interface MirrorFeedback {
   evidence_links: string[]; // Evidence IDs
 }
 
+// Extended Mirror Feedback for Coach responses (Ticket 005)
+export interface IfThenExperiment {
+  if: string;
+  then: string;
+}
+
+export interface CoachMirrorFeedback {
+  observed_change: string;
+  hypothesis: string;
+  next_experiment: IfThenExperiment; // Structured If-Then format
+  evidence_links: string[];
+  contradiction_detected: boolean;
+  contradiction_reference: {
+    past_statement: string;
+    past_date: string;
+  } | null;
+}
+
+// Helper to convert CoachMirrorFeedback to MirrorFeedback (for DB storage)
+export function coachFeedbackToMirrorFeedback(coach: CoachMirrorFeedback): MirrorFeedback {
+  return {
+    observed_change: coach.observed_change,
+    hypothesis: coach.hypothesis,
+    next_experiment: coach.next_experiment.if && coach.next_experiment.then
+      ? `If ${coach.next_experiment.if}, then ${coach.next_experiment.then}`
+      : '',
+    evidence_links: coach.evidence_links,
+  };
+}
+
 export interface Checkin {
   id: string;
   user_id: string;

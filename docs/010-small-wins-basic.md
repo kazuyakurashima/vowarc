@@ -278,30 +278,70 @@ function calculateTier(metrics: ProgressMetrics): 'on_track' | 'at_risk' | 'need
 ## Todo
 
 ### データ
-- [ ] checkins テーブルに if_then_triggered カラム追加
-- [ ] small_wins_cache テーブル作成（オプション）
-- [ ] キャッシュ更新トリガー
+- [x] checkins テーブルに if_then_triggered カラム追加（初期スキーマで実装済み）
+- [ ] small_wins_cache テーブル作成（オプション・Phase B）
+- [ ] キャッシュ更新トリガー（オプション・Phase B）
 
 ### メトリクス計算
-- [ ] チェックイン継続率計算
-- [ ] チェックイン連続日数計算
-- [ ] If-Then発動回数カウント ← 追加
-- [ ] If-Then発動率計算 ← 追加
-- [ ] Evidence提出数カウント
-- [ ] Evidence提出率計算 ← 追加
-- [ ] コミット履行率計算
-- [ ] ティア判定ロジック（4メトリクス平均版） ← 更新
+- [x] チェックイン継続率計算
+- [x] チェックイン連続日数計算
+- [x] If-Then発動回数カウント
+- [x] If-Then発動率計算
+- [x] Evidence提出数カウント
+- [x] Evidence提出率計算
+- [x] コミット履行率計算
+- [x] ティア判定ロジック（4メトリクス平均版）
 
 ### UI実装
-- [ ] ホーム画面サマリーコンポーネント（If-Then表示追加）
-- [ ] ダッシュボード画面（If-Then表示追加）
-- [ ] プログレスバーコンポーネント
-- [ ] ティア表示カード
-- ~~チェックイン時のIf-Then記録UI~~ → 004 音声チェックインで実装
+- [x] ホーム画面サマリーコンポーネント（SmallWinsSummary）
+- [x] ダッシュボード画面（dashboard.tsx）
+- [x] プログレスバーコンポーネント
+- [x] ティア表示カード
+- ~~チェックイン時のIf-Then記録UI~~ → 004 音声チェックインで実装済み
 
 ### API実装
-- [ ] GET /api/small-wins/summary（If-Thenメトリクス追加）
-- ~~チェックイン時のif_then_triggered保存処理~~ → 004 音声チェックインで実装
+- [x] GET /api/small-wins/summary（全メトリクス対応）
+- ~~チェックイン時のif_then_triggered保存処理~~ → 004 音声チェックインで実装済み
+
+**実装完了: 2026-01-13**
+
+---
+
+## 既知の制限事項（MVP）
+
+### If-Then発動率の計算
+- **現行**: `if_then_triggered回数 / 全チェックイン数`
+- **理想**: `if_then_triggered回数 / 障害遭遇回数`
+- **Phase B対応**: `obstacle_encountered` フラグを追加し、障害遭遇時の実行成功率を計測
+
+### 週次データ表示
+- **現行**: 全期間の累計データを表示
+- **Phase B対応**: 週単位のフィルタリングを追加
+
+### ティア計算の4指標
+1. チェックイン継続率
+2. If-Then発動率
+3. Evidence提出率
+4. コミット履行率
+
+※ 連続日数（streak）は表示のみで、ティア平均には含まない
+
+---
+
+## 実装ファイル一覧
+
+### メトリクス計算
+- `lib/metrics/small-wins.ts` - メトリクス計算ロジック、ティア判定
+
+### API
+- `app/api/small-wins/summary+api.ts` - メトリクスサマリーAPI
+
+### フック
+- `hooks/data/useSmallWins.ts` - Small Winsデータフック
+
+### UIコンポーネント
+- `components/dashboard/SmallWinsSummary.tsx` - ホーム画面用サマリー
+- `app/(tabs)/dashboard.tsx` - ダッシュボード画面
 
 ---
 

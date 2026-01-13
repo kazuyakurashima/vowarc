@@ -15,21 +15,21 @@
 
 requirements.mdで「必須」と定義された機能群。最小限の実装でMVPを構築する。
 
-| チケット | 概要 | 優先度 |
-|---------|------|--------|
-| [001-foundation](./001-foundation.md) | 基盤構築（認証、DB設計、API設定） | 最高 |
-| [002-day0-initiation](./002-day0-initiation.md) | Day 0 オンボーディング・心理的契約・**Meaning Statement生成** | 高 |
-| [003-home-screen](./003-home-screen.md) | ホーム画面（北極星・最小コミット表示） | 高 |
-| [004-voice-checkin](./004-voice-checkin.md) | 音声チェックイン機能 | 高 |
-| [005-ai-coach-basic](./005-ai-coach-basic.md) | AIコーチ基本機能（**矛盾検出・介入設定基本版含む**） | 高 |
-| [006-memory-system](./006-memory-system.md) | 二層記憶システム（Mutable/Immutable分離） | 高 |
-| [007-day21-judgment-gate](./007-day21-judgment-gate.md) | Day 21 継続判断儀式（Commitment Report） | 高 |
-| [008-payment-system](./008-payment-system.md) | 課金システム（Day10登録・Day21**一括払い**） | 高 |
-| [009-evidence-journal-basic](./009-evidence-journal-basic.md) | Evidence Journal（基本版：画像/URL/メモ保存） | 高 |
-| [010-small-wins-basic](./010-small-wins-basic.md) | Small Wins Dashboard（基本版：**If-Then発動率含む**プロセスメトリクス） | 中 |
-| [011-cognitive-map-basic](./011-cognitive-map-basic.md) | Cognitive Map（簡易版：リスト形式） | 中 |
-| [012-exit-ritual-basic](./012-exit-ritual-basic.md) | Exit Ritual（基本版：学び回収・解約レビュー） | 中 |
-| [016-violation-protocol](./016-violation-protocol.md) | **契約違反プロトコル（MVP版：Warning→Renegotiation）** | 中 |
+| チケット | 概要 | 優先度 | 状態 |
+|---------|------|--------|------|
+| [001-foundation](./001-foundation.md) | 基盤構築（認証、DB設計、API設定） | 最高 | ✅ 完了 |
+| [002-day0-initiation](./002-day0-initiation.md) | Day 0 オンボーディング・心理的契約・**Meaning Statement生成** | 高 | ✅ 完了 |
+| [003-home-screen](./003-home-screen.md) | ホーム画面（北極星・最小コミット表示） | 高 | ✅ 完了 |
+| [004-voice-checkin](./004-voice-checkin.md) | 音声チェックイン機能 | 高 | ✅ 完了 |
+| [005-ai-coach-basic](./005-ai-coach-basic.md) | AIコーチ基本機能（**矛盾検出・介入設定基本版含む**） | 高 | ✅ 完了 |
+| [006-memory-system](./006-memory-system.md) | 二層記憶システム（Mutable/Immutable分離） | 高 | ✅ 完了 |
+| [007-day21-judgment-gate](./007-day21-judgment-gate.md) | Day 21 継続判断儀式（Commitment Report） | 高 | ✅ 完了 |
+| [008-payment-system](./008-payment-system.md) | 課金システム（Day10登録・Day21**一括払い**） | 高 | 未着手 |
+| [009-evidence-journal-basic](./009-evidence-journal-basic.md) | Evidence Journal（基本版：画像/URL/メモ保存） | 高 | ✅ 完了 |
+| [010-small-wins-basic](./010-small-wins-basic.md) | Small Wins Dashboard（基本版：**If-Then発動率含む**プロセスメトリクス） | 中 | ✅ 完了 |
+| [011-cognitive-map-basic](./011-cognitive-map-basic.md) | Cognitive Map（簡易版：リスト形式） | 中 | 未着手 |
+| [012-exit-ritual-basic](./012-exit-ritual-basic.md) | Exit Ritual（基本版：学び回収・解約レビュー） | 中 | 未着手 |
+| [016-violation-protocol](./016-violation-protocol.md) | **契約違反プロトコル（MVP版：Warning→Renegotiation）** | 中 | 未着手 |
 
 ### Phase B: 拡張機能
 
