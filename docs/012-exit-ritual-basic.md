@@ -151,18 +151,19 @@ CREATE TABLE exit_rituals (
 );
 ```
 
-### cancellation_reviews テーブル（008で定義済み、拡張）
+### exit_reviews テーブル（008で定義済み）
+
+> **Note:** exit_reviews テーブルは 008-payment-system.md で定義済み。
+> Exit Ritualからのレビューもこのテーブルに保存する。
 
 ```sql
-CREATE TABLE cancellation_reviews (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID REFERENCES users(id) NOT NULL,
-  exit_ritual_id UUID REFERENCES exit_rituals(id),
-  reason_category VARCHAR(100) NOT NULL,
-  expectation_gap TEXT,
-  missing_support TEXT,
-  created_at TIMESTAMP DEFAULT NOW()
-);
+-- 008-payment-system.md で定義済み
+-- exit_type: 'graduation' | 'trial_stop' | 'refund'
+-- Exit Ritualの場合は exit_type = 'trial_stop' または 'graduation'
+
+-- exit_ritual_id を追加する場合の拡張（オプション）
+ALTER TABLE exit_reviews
+ADD COLUMN exit_ritual_id UUID REFERENCES exit_rituals(id);
 ```
 
 ---
@@ -236,7 +237,7 @@ async function generatePotentialStatement(
 
 ### データモデル
 - [ ] exit_rituals テーブル作成
-- [ ] cancellation_reviews テーブル拡張（exit_ritual_id追加）
+- [ ] exit_reviews テーブルに exit_ritual_id カラム追加（008で定義済みテーブルを拡張）
 
 ### サマリー生成
 - [ ] 期間・回数の計算
