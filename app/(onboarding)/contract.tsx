@@ -1,19 +1,49 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { router } from 'expo-router';
 import { Button } from '@/components/ui';
 import { colors, spacing, fontSizes, typography } from '@/constants/theme';
+import { getApiUrl } from '@/constants/config';
+import { supabase } from '@/lib/supabase';
 
 export default function ContractScreen() {
-  const [agreed, setAgreed] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleAgree = async () => {
     try {
-      // TODO: Save contract acceptance to Supabase
-      // TODO: Update user phase to 'trial'
+      setLoading(true);
+      setError('');
+
+      // Get JWT token
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+
+      if (!token) {
+        throw new Error('認証トークンがありません');
+      }
+
+      // Accept contract and start trial
+      const response = await fetch(getApiUrl('api/onboarding/accept-contract'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '契約の承認に失敗しました');
+      }
+
+      // Navigate to main app
       router.replace('/(tabs)');
     } catch (error) {
-      console.error('Error saving contract:', error);
+      console.error('Error accepting contract:', error);
+      setError(error instanceof Error ? error.message : '契約の承認に失敗しました');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -97,9 +127,17 @@ export default function ContractScreen() {
         </Text>
       </View>
 
+      {error && (
+        <View style={styles.errorBox}>
+          <Text style={styles.errorText}>{error}</Text>
+        </View>
+      )}
+
       <Button
         title="約束します"
         onPress={handleAgree}
+        loading={loading}
+        disabled={loading}
         style={styles.button}
       />
 
@@ -107,6 +145,7 @@ export default function ContractScreen() {
         title="前の画面に戻る"
         variant="text"
         onPress={() => router.back()}
+        disabled={loading}
         style={styles.backButton}
       />
     </ScrollView>
@@ -187,6 +226,20 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     color: colors.textPrimary,
     lineHeight: fontSizes.sm * typography.body.lineHeight,
+  },
+  errorBox: {
+    marginBottom: spacing.lg,
+    padding: spacing.md,
+    backgroundColor: colors.error + '15',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.error,
+  },
+  errorText: {
+    fontFamily: typography.body.fontFamily,
+    fontSize: fontSizes.sm,
+    color: colors.error,
+    textAlign: 'center',
   },
   button: {
     marginTop: spacing.lg,

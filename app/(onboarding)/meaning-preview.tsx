@@ -3,8 +3,9 @@ import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-nat
 import { router } from 'expo-router';
 import { Button } from '@/components/ui';
 import { colors, spacing, fontSizes, typography } from '@/constants/theme';
-import { generateMeaningStatement, generateVow } from '@/lib/openai/client';
 import { useOnboardingStore } from '@/stores/onboardingStore';
+import { getApiUrl } from '@/constants/config';
+import { supabase } from '@/lib/supabase';
 
 export default function MeaningPreviewScreen() {
   const { answers, generatedMeaning, generatedVow, setGeneratedMeaning, setGeneratedVow } = useOnboardingStore();
@@ -24,14 +25,35 @@ export default function MeaningPreviewScreen() {
       setLoading(true);
       setError('');
 
-      const whyAnswer = answers.why;
-      const painAnswer = answers.pain;
-      const idealAnswer = answers.ideal;
+      // Get JWT token
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
 
-      const [newMeaning, newVow] = await Promise.all([
-        generateMeaningStatement(whyAnswer, painAnswer, idealAnswer),
-        generateVow(whyAnswer, painAnswer, idealAnswer),
-      ]);
+      if (!token) {
+        throw new Error('認証トークンがありません');
+      }
+
+      // Call unified API for generating Meaning Statement and Vow
+      const response = await fetch(getApiUrl('api/onboarding/generate-meaning'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          why: answers.why,
+          pain: answers.pain,
+          ideal: answers.ideal,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '生成に失敗しました');
+      }
+
+      const data = await response.json();
+      const { meaningStatement: newMeaning, vow: newVow } = data;
 
       setMeaningStatement(newMeaning);
       setVow(newVow);
@@ -47,10 +69,47 @@ export default function MeaningPreviewScreen() {
 
   const handleNext = async () => {
     try {
-      // TODO: Save to Supabase
+      setLoading(true);
+      setError('');
+
+      // Get JWT token
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+
+      if (!token) {
+        throw new Error('認証トークンがありません');
+      }
+
+      // Save all onboarding data via API
+      const response = await fetch(getApiUrl('api/onboarding/save-onboarding'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          answers: {
+            why: answers.why,
+            pain: answers.pain,
+            ideal: answers.ideal,
+          },
+          meaningStatement,
+          vow,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '保存に失敗しました');
+      }
+
+      // Navigate to contract screen
       router.push('/(onboarding)/contract');
     } catch (error) {
       console.error('Error saving statements:', error);
+      setError('保存に失敗しました。もう一度お試しください。');
+    } finally {
+      setLoading(false);
     }
   };
 

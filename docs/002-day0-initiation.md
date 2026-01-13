@@ -338,10 +338,10 @@ CREATE TABLE onboarding_answers (
 - [x] (onboarding)/why.tsx - Why質問
 - [x] (onboarding)/pain.tsx - Pain質問
 - [x] (onboarding)/ideal.tsx - Ideal質問
-- [x] (onboarding)/meaning-preview.tsx - Meaning Statement生成・編集
-- [ ] (onboarding)/vow-preview.tsx - Vow生成・編集（meaning-previewに統合済み）
-- [x] (onboarding)/contract.tsx - 心理的契約
-- [ ] (onboarding)/complete.tsx - 完了画面（不要、contractから直接(tabs)へ）
+- [x] (onboarding)/meaning-preview.tsx - Meaning Statement生成・編集（API統合完了）
+- [x] (onboarding)/vow-preview.tsx - Vow生成・編集（meaning-previewに統合済み）
+- [x] (onboarding)/contract.tsx - 心理的契約（API統合完了）
+- [x] (onboarding)/complete.tsx - 完了画面（不要、contractから直接(tabs)へ）
 
 ### 画面実装（Day1-3 フォローアップ）
 - [ ] (onboarding)/(follow-up)/origin.tsx - 原体験
@@ -368,11 +368,11 @@ CREATE TABLE onboarding_answers (
 
 ### データ保存
 - [x] onboarding_answers テーブル作成（input_type/audio_url追加）
-- [ ] 回答保存API実装（音声対応）
-- [ ] Meaning Statement保存API実装
-- [ ] Vow保存API実装
-- [ ] Anti-Pattern保存API実装（memories）
-- [ ] ユーザーフェーズ更新API実装
+- [x] 回答保存API実装（save-onboarding+api.ts、音声対応）
+- [x] Meaning Statement保存API実装（save-onboarding+api.ts）
+- [x] Vow保存API実装（save-onboarding+api.ts）
+- [x] Anti-Pattern保存API実装（save-onboarding+api.ts、memories）
+- [x] ユーザーフェーズ更新API実装（accept-contract+api.ts）
 
 ### UI/UX
 - [ ] フェード遷移アニメーション
