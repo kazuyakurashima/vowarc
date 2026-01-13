@@ -25,11 +25,12 @@ import { buildApiUrl } from '@/lib/api-config';
 
 type VoiceInputProps = {
   onTranscriptionComplete: (text: string) => void;
+  onVoiceInputUsed?: () => void; // Callback when voice input is used
 };
 
 type FlowStep = 'idle' | 'recording' | 'transcribing' | 'reviewing';
 
-export function VoiceInput({ onTranscriptionComplete }: VoiceInputProps) {
+export function VoiceInput({ onTranscriptionComplete, onVoiceInputUsed }: VoiceInputProps) {
   const { user } = useAuth();
   const { recording, startRecording, stopRecording, cancelRecording } =
     useAudioRecording();
@@ -125,6 +126,7 @@ export function VoiceInput({ onTranscriptionComplete }: VoiceInputProps) {
 
   const handleConfirm = () => {
     onTranscriptionComplete(transcription);
+    onVoiceInputUsed?.(); // Notify that voice input was used
     setTranscription('');
     setFlowStep('idle');
     setVisible(false);

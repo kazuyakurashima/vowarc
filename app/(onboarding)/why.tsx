@@ -7,7 +7,7 @@ import { useOnboardingStore } from '@/stores/onboardingStore';
 import { VoiceInput } from '@/components/onboarding/VoiceInput';
 
 export default function WhyScreen() {
-  const { answers, setAnswer } = useOnboardingStore();
+  const { answers, setAnswer, setInputType } = useOnboardingStore();
   const [localAnswer, setLocalAnswer] = useState(answers.why);
 
   const handleNext = async () => {
@@ -44,6 +44,9 @@ export default function WhyScreen() {
         <VoiceInput
           onTranscriptionComplete={(text) => {
             setLocalAnswer(text);
+          }}
+          onVoiceInputUsed={() => {
+            setInputType('why', 'voice');
           }}
         />
       </View>

@@ -7,7 +7,7 @@ import { useOnboardingStore } from '@/stores/onboardingStore';
 import { VoiceInput } from '@/components/onboarding/VoiceInput';
 
 export default function PainScreen() {
-  const { answers, setAnswer } = useOnboardingStore();
+  const { answers, setAnswer, setInputType } = useOnboardingStore();
   const [localAnswer, setLocalAnswer] = useState(answers.pain);
 
   const handleNext = async () => {
@@ -45,6 +45,9 @@ export default function PainScreen() {
         <VoiceInput
           onTranscriptionComplete={(text) => {
             setLocalAnswer(text);
+          }}
+          onVoiceInputUsed={() => {
+            setInputType('pain', 'voice');
           }}
         />
       </View>

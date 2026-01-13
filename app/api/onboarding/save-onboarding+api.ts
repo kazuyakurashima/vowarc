@@ -37,6 +37,7 @@ export async function POST(request: Request) {
     // Parse request body
     const {
       answers, // { why, pain, ideal }
+      inputTypes, // { why, pain, ideal } - 'text' | 'voice'
       meaningStatement,
       vow,
     } = await request.json();
@@ -65,19 +66,19 @@ export async function POST(request: Request) {
         user_id: userId,
         question_key: 'why',
         answer: answers.why,
-        input_type: 'text',
+        input_type: inputTypes?.why || 'text',
       }),
       serverClient.from('onboarding_answers').insert({
         user_id: userId,
         question_key: 'pain',
         answer: answers.pain,
-        input_type: 'text',
+        input_type: inputTypes?.pain || 'text',
       }),
       serverClient.from('onboarding_answers').insert({
         user_id: userId,
         question_key: 'ideal',
         answer: answers.ideal,
-        input_type: 'text',
+        input_type: inputTypes?.ideal || 'text',
       }),
     ];
 
@@ -132,11 +133,11 @@ export async function POST(request: Request) {
         const memoryInserts = antiPatterns.map((ap) => ({
           user_id: userId,
           memory_type: 'milestone' as const,
-          category: 'anti_pattern',
           content: ap.pattern,
           confidence_score: ap.confidence,
-          source_type: 'onboarding' as const,
-          is_mutable: true,
+          source_type: 'manual' as const, // Onboarding is closest to manual input
+          tags: ['anti_pattern'], // Tag for categorization
+          is_immutable: false, // Mutable initially, becomes immutable after 24h
         }));
 
         const { error: memoryError } = await serverClient

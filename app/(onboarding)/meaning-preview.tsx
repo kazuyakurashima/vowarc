@@ -4,11 +4,11 @@ import { router } from 'expo-router';
 import { Button } from '@/components/ui';
 import { colors, spacing, fontSizes, typography } from '@/constants/theme';
 import { useOnboardingStore } from '@/stores/onboardingStore';
-import { getApiUrl } from '@/constants/config';
+import { buildApiUrl } from '@/lib/api-config';
 import { supabase } from '@/lib/supabase';
 
 export default function MeaningPreviewScreen() {
-  const { answers, generatedMeaning, generatedVow, setGeneratedMeaning, setGeneratedVow } = useOnboardingStore();
+  const { answers, inputTypes, generatedMeaning, generatedVow, setGeneratedMeaning, setGeneratedVow } = useOnboardingStore();
   const [meaningStatement, setMeaningStatement] = useState(generatedMeaning);
   const [vow, setVow] = useState(generatedVow);
   const [loading, setLoading] = useState(!generatedMeaning || !generatedVow);
@@ -34,7 +34,7 @@ export default function MeaningPreviewScreen() {
       }
 
       // Call unified API for generating Meaning Statement and Vow
-      const response = await fetch(getApiUrl('api/onboarding/generate-meaning'), {
+      const response = await fetch(buildApiUrl('/api/onboarding/generate-meaning'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ export default function MeaningPreviewScreen() {
       }
 
       // Save all onboarding data via API
-      const response = await fetch(getApiUrl('api/onboarding/save-onboarding'), {
+      const response = await fetch(buildApiUrl('/api/onboarding/save-onboarding'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -92,6 +92,11 @@ export default function MeaningPreviewScreen() {
             why: answers.why,
             pain: answers.pain,
             ideal: answers.ideal,
+          },
+          inputTypes: {
+            why: inputTypes.why,
+            pain: inputTypes.pain,
+            ideal: inputTypes.ideal,
           },
           meaningStatement,
           vow,

@@ -6,9 +6,19 @@ interface OnboardingAnswer {
   ideal: string;
 }
 
+type InputType = 'text' | 'voice';
+
+interface InputTypes {
+  why: InputType;
+  pain: InputType;
+  ideal: InputType;
+}
+
 interface OnboardingStore {
   answers: OnboardingAnswer;
+  inputTypes: InputTypes;
   setAnswer: (key: keyof OnboardingAnswer, value: string) => void;
+  setInputType: (key: keyof InputTypes, type: InputType) => void;
   clearAnswers: () => void;
   generatedMeaning: string;
   generatedVow: string;
@@ -22,11 +32,23 @@ export const useOnboardingStore = create<OnboardingStore>((set) => ({
     pain: '',
     ideal: '',
   },
+  inputTypes: {
+    why: 'text',
+    pain: 'text',
+    ideal: 'text',
+  },
   setAnswer: (key, value) =>
     set((state) => ({
       answers: {
         ...state.answers,
         [key]: value,
+      },
+    })),
+  setInputType: (key, type) =>
+    set((state) => ({
+      inputTypes: {
+        ...state.inputTypes,
+        [key]: type,
       },
     })),
   clearAnswers: () =>
@@ -35,6 +57,11 @@ export const useOnboardingStore = create<OnboardingStore>((set) => ({
         why: '',
         pain: '',
         ideal: '',
+      },
+      inputTypes: {
+        why: 'text',
+        pain: 'text',
+        ideal: 'text',
       },
       generatedMeaning: '',
       generatedVow: '',

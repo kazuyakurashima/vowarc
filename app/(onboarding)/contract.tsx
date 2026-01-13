@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-nat
 import { router } from 'expo-router';
 import { Button } from '@/components/ui';
 import { colors, spacing, fontSizes, typography } from '@/constants/theme';
-import { getApiUrl } from '@/constants/config';
+import { buildApiUrl } from '@/lib/api-config';
 import { supabase } from '@/lib/supabase';
 
 export default function ContractScreen() {
@@ -24,7 +24,7 @@ export default function ContractScreen() {
       }
 
       // Accept contract and start trial
-      const response = await fetch(getApiUrl('api/onboarding/accept-contract'), {
+      const response = await fetch(buildApiUrl('/api/onboarding/accept-contract'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
