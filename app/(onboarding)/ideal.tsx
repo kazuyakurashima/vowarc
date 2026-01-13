@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { Button, TextInput } from '@/components/ui';
 import { colors, spacing, fontSizes, typography } from '@/constants/theme';
 import { useOnboardingStore } from '@/stores/onboardingStore';
+import { VoiceInput } from '@/components/onboarding/VoiceInput';
 
 export default function IdealScreen() {
   const { answers, setAnswer: saveAnswer } = useOnboardingStore();
@@ -32,15 +33,24 @@ export default function IdealScreen() {
         理想の姿を言葉にしてください
       </Text>
 
-      <TextInput
-        value={localAnswer}
-        onChangeText={setLocalAnswer}
-        multiline
-        numberOfLines={6}
-        placeholder="ここに入力してください..."
-        style={styles.input}
-        containerStyle={styles.inputContainer}
-      />
+      <View style={styles.inputRow}>
+        <View style={styles.textInputWrapper}>
+          <TextInput
+            value={localAnswer}
+            onChangeText={setLocalAnswer}
+            multiline
+            numberOfLines={6}
+            placeholder="ここに入力してください..."
+            style={styles.input}
+            containerStyle={styles.inputContainer}
+          />
+        </View>
+        <VoiceInput
+          onTranscriptionComplete={(text) => {
+            setLocalAnswer(text);
+          }}
+        />
+      </View>
 
       <Button
         title="次へ"
@@ -86,8 +96,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: spacing.xxl,
   },
-  inputContainer: {
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: spacing.md,
+    width: '100%',
     marginBottom: spacing.xl,
+  },
+  textInputWrapper: {
+    flex: 1,
+  },
+  inputContainer: {
+    marginBottom: 0,
   },
   input: {
     height: 150,

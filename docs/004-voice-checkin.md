@@ -297,15 +297,15 @@ INSERT INTO checkins (
 ## Todo
 
 ### 音声機能
-- [ ] expo-av 導入
-- [ ] マイクパーミッション処理
-- [ ] 録音開始/停止機能
-- [ ] 波形ビジュアライゼーション
+- [x] expo-av 導入
+- [x] マイクパーミッション処理
+- [x] 録音開始/停止機能
+- [x] Orb ビジュアライゼーション（波形の代わりに抽象的Orb UI実装）
 
 ### Speech-to-Text
-- [ ] Whisper API 連携
-- [ ] リアルタイム文字起こし表示
-- [ ] エラーハンドリング
+- [x] Whisper API 連携（JWT認証実装済み）
+- [x] 文字起こし結果の表示（編集可能なTextInput実装）
+- [x] エラーハンドリング（ネットワークエラー、認証エラー等対応）
 
 ### AI応答
 - [ ] チェックインプロンプト作成
@@ -313,16 +313,23 @@ INSERT INTO checkins (
 - [ ] コミットメント追加機能
 
 ### UI実装
-- [ ] フルスクリーン録音画面
-- [ ] AI応答表示画面
-- [ ] If-Then記録質問画面 ← 追加
-- [ ] 画面遷移フロー
+- [x] フルスクリーン録音画面（Orb + 録音ボタン）
+- [x] 書き起こし結果の確認・編集画面
+- [x] If-Then記録質問画面（2ステップ実装）
+- [x] 画面遷移フロー（idle → recording → transcribing → review → if-then → saving）
 
 ### データ保存
-- [ ] チェックイン保存API（if_then_triggered含む） ← 更新
-- [ ] 音声ファイルアップロード
+- [x] チェックイン保存API（if_then_triggered含む、JWT認証実装済み）
+- [x] 音声ファイルアップロード（Supabase Storage、base64-arraybuffer形式）
 - [ ] チェックイン履歴取得
-- [ ] If-Then記録の保存処理 ← 追加
+- [x] If-Then記録の保存処理（2ステップ質問フロー実装）
+
+### セキュリティ
+- [x] JWT認証（Bearer token）
+- [x] サーバーサイドトークン検証（getServerClient使用）
+- [x] SSRF防止（Supabaseドメイン検証）
+- [x] フォルダ所有権検証（自分の音声ファイルのみ文字起こし可能）
+- [x] localStorage問題修正（サーバーサイド実行時のno-op化）
 
 ---
 

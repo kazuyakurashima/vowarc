@@ -9,7 +9,7 @@ import { useHomeData } from '@/hooks/data/useHomeData';
 import { supabase } from '@/lib/supabase';
 import { MirrorFeedback } from '@/lib/supabase/types';
 import { colors, spacing, typography, fontSizes } from '@/constants/theme';
-import { getApiUrl } from '@/constants/config';
+import { buildApiUrl } from '@/lib/api-config';
 
 type Step = 'input' | 'feedback' | 'ifthen' | 'complete';
 
@@ -35,7 +35,7 @@ export default function TextCheckinScreen() {
       setError(null);
 
       // Call Mirror Feedback generation API
-      const response = await fetch(getApiUrl('api/checkins/generate-mirror-feedback'), {
+      const response = await fetch(buildApiUrl('/api/checkins/generate-mirror-feedback'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -64,12 +64,12 @@ export default function TextCheckinScreen() {
     setStep('ifthen');
   };
 
-  const handleIfThenAnswer = async (triggered: boolean) => {
+  const handleIfThenAnswer = async (triggered: boolean | null) => {
     setIfThenTriggered(triggered);
     await saveCheckin(triggered);
   };
 
-  const saveCheckin = async (triggered: boolean) => {
+  const saveCheckin = async (triggered: boolean | null) => {
     if (!user?.id) {
       Alert.alert('エラー', 'ユーザー情報が見つかりません');
       return;
@@ -78,25 +78,35 @@ export default function TextCheckinScreen() {
     try {
       setLoading(true);
 
-      // Save checkin to database
-      const { data: checkin, error: checkinError } = await supabase
-        .from('checkins')
-        .insert({
-          user_id: user.id,
-          date: new Date().toISOString().split('T')[0],
-          type: 'morning',
-          transcript: checkinText,
-          mirror_feedback: mirrorFeedback,
-          if_then_triggered: triggered,
-        })
-        .select()
-        .single();
+      // Get JWT token
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
 
-      if (checkinError) throw checkinError;
+      if (!token) {
+        throw new Error('No authentication token available');
+      }
 
-      // Extract memories asynchronously (non-blocking)
-      extractMemories(checkin.id, checkinText);
+      // Call save API with JWT auth
+      const response = await fetch(buildApiUrl('/api/checkins/save'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          content: checkinText,
+          type: 'text',
+          ifThenTriggered: triggered,
+          mirrorFeedback: mirrorFeedback,
+        }),
+      });
 
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Save failed');
+      }
+
+      // Memory extraction happens automatically in save API (fire-and-forget)
       setStep('complete');
 
       // Navigate back to home after 1.5 seconds
@@ -108,40 +118,6 @@ export default function TextCheckinScreen() {
       Alert.alert('エラー', 'チェックインの保存に失敗しました');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const extractMemories = async (checkinId: string, transcript: string) => {
-    try {
-      const response = await fetch(getApiUrl('api/memories/extract'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          checkinId,
-          transcript,
-          userId: user?.id,
-        }),
-      });
-
-      if (!response.ok) {
-        console.warn('Memory extraction failed');
-        return;
-      }
-
-      const data = await response.json();
-
-      // Insert memories to database (client-side for RLS)
-      if (data.memories && data.memories.length > 0) {
-        await supabase.from('memories').insert(
-          data.memories.map((mem: any) => ({
-            ...mem,
-            user_id: user?.id,
-          }))
-        );
-      }
-    } catch (err) {
-      console.warn('Memory extraction error:', err);
-      // Non-blocking: don't show error to user
     }
   };
 

@@ -5,7 +5,7 @@
 
 export type UserPhase = 'day0' | 'trial' | 'paid' | 'completed' | 'terminated';
 
-export type CheckinType = 'morning' | 'evening' | 'voice';
+export type CheckinType = 'morning' | 'evening' | 'voice' | 'text';
 
 export type CommitmentType = 'daily' | 'weekly' | 'milestone';
 
@@ -50,12 +50,14 @@ export interface Checkin {
   user_id: string;
   date: string;
   type: CheckinType;
-  transcript: string | null;
+  content: string | null; // Unified content field (ticket 004)
+  transcript: string | null; // Legacy field for backward compatibility
   audio_url: string | null;
   mood: number | null; // Nullable: 1-5 scale
   if_then_triggered: boolean | null; // If-Then execution tracking (ticket 004)
   mirror_feedback: MirrorFeedback | null; // AI-generated Mirror Feedback (ticket 003)
   created_at: string;
+  updated_at: string; // Auto-updated timestamp (ticket 004)
 }
 
 export interface Commitment {

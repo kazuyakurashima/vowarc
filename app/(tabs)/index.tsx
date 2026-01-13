@@ -99,10 +99,7 @@ export default function HomeScreen() {
         />
         <Button
           title="音声でチェックイン"
-          onPress={() => {
-            // Placeholder for voice checkin (Ticket 004)
-            alert('音声チェックインは準備中です');
-          }}
+          onPress={() => router.push('/(tabs)/checkin-voice')}
           variant="secondary"
           style={styles.checkinButton}
         />

@@ -218,19 +218,29 @@
 - [x] Meaning Statement表示コンポーネント
 - [x] Vow表示コンポーネント
 - [x] 今日のコミット一覧コンポーネント
-- [x] クイックアクションボタン
-- [x] テキストチェックイン画面/モーダル ← 追加
-- [x] If-Then記録質問コンポーネント（004と共通） ← 追加
+- [x] クイックアクションボタン（音声・テキスト両対応）
+- [x] テキストチェックイン画面（4ステップフロー実装）
+- [x] If-Then記録質問コンポーネント（004と共通、2ステップ質問実装）
 
 ### データ連携
-- [x] ホームデータ取得hook作成
+- [x] ホームデータ取得hook作成（useHomeData集約hook実装）
 - [ ] コミットメント完了API連携
 - [ ] コミットメント追加モーダル
-- [x] テキストチェックイン保存API連携（if_then_triggered含む） ← 追加
+- [x] テキストチェックイン保存API連携（if_then_triggered含む、JWT認証実装）
+
+### AI連携
+- [x] Mirror Feedback生成サービス実装（4要素: Observed Change, Hypothesis, Next Experiment, Evidence Links）
+- [x] Mirror Feedback生成API実装（/api/checkins/generate-mirror-feedback）
+- [x] MirrorFeedbackDisplayコンポーネント実装
+
+### セキュリティ修正
+- [x] テキストチェックインのJWT認証実装（direct Supabase insertから変更）
+- [x] save API経由でのユーザーID検証
+- [x] メモリー抽出のJWT認証対応
 
 ### UI/UX
 - [ ] アニメーション（フェードイン等）
-- [ ] Quiet Luxuryテーマ適用（Ecru基調、低彩度）
+- [x] Quiet Luxuryテーマ適用（Ecru基調、低彩度）
 - [ ] 波形/抽象ビジュアル背景
 
 ---

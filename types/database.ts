@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type PhaseType = 'day0' | 'trial' | 'paid' | 'completed' | 'terminated';
-export type CheckinType = 'morning' | 'evening' | 'voice';
+export type CheckinType = 'morning' | 'evening' | 'voice' | 'text';
 export type CommitmentType = 'daily' | 'weekly' | 'milestone';
 export type CommitmentStatus = 'pending' | 'completed' | 'failed';
 export type MemoryType = 'short_term' | 'milestone';
@@ -102,36 +102,42 @@ export interface Database {
           user_id: string;
           date: string;
           type: CheckinType;
+          content: string | null;
           transcript: string | null;
           audio_url: string | null;
           mood: number | null;
           if_then_triggered: boolean | null;
           mirror_feedback: Json | null;
           created_at: string;
+          updated_at: string;
         };
         Insert: {
           id?: string;
           user_id: string;
           date: string;
           type: CheckinType;
+          content?: string | null;
           transcript?: string | null;
           audio_url?: string | null;
           mood?: number | null;
           if_then_triggered?: boolean | null;
           mirror_feedback?: Json | null;
           created_at?: string;
+          updated_at?: string;
         };
         Update: {
           id?: string;
           user_id?: string;
           date?: string;
           type?: CheckinType;
+          content?: string | null;
           transcript?: string | null;
           audio_url?: string | null;
           mood?: number | null;
           if_then_triggered?: boolean | null;
           mirror_feedback?: Json | null;
           created_at?: string;
+          updated_at?: string;
         };
       };
       commitments: {

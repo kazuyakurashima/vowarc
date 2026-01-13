@@ -361,10 +361,10 @@ CREATE TABLE onboarding_answers (
 - [ ] 7テーマ完成後のMeaning/Vow v2生成プロンプト ← 追加
 
 ### 音声入力（MVP簡易版） ← 追加
-- [ ] 録音コンポーネント（Expo AV - 音声ファイル取得用）
-- [ ] STT連携（OpenAI Whisper API または react-native-voice）
-- [ ] 音声ファイルアップロード処理（Supabase Storage）
-- [ ] テキスト/音声入力切り替えUI
+- [x] 録音コンポーネント（VoiceInput - モーダルベース実装）
+- [x] STT連携（OpenAI Whisper API、JWT認証実装）
+- [x] 音声ファイルアップロード処理（Supabase Storage、base64-arraybuffer形式）
+- [x] テキスト/音声入力切り替えUI（マイクボタン配置、why/pain/ideal画面に統合）
 
 ### データ保存
 - [x] onboarding_answers テーブル作成（input_type/audio_url追加）
@@ -379,7 +379,7 @@ CREATE TABLE onboarding_answers (
 - [ ] 署名コンポーネント（指でサイン）
 - [ ] 契約表示デザイン
 - [ ] 編集可能なテキスト表示
-- [ ] 音声録音ボタン・インジケーター ← 追加
+- [x] 音声録音ボタン・インジケーター（マイクボタン + モーダルUI実装）
 
 ---
 

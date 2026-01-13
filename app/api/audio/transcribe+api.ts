@@ -5,9 +5,34 @@
 
 import { openai } from '@/lib/openai/client';
 import { toFile } from 'openai/uploads';
+import { getServerClient } from '@/lib/supabase';
 
 export async function POST(request: Request) {
   try {
+    // Get authorization token from header
+    const authHeader = request.headers.get('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return Response.json(
+        { error: 'Unauthorized: Missing or invalid authorization token' },
+        { status: 401 }
+      );
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+
+    // Verify token using service role client
+    const serverClient = getServerClient();
+    const { data: userData, error: authError } = await serverClient.auth.getUser(token);
+
+    if (authError || !userData.user) {
+      console.error('Auth verification failed:', authError);
+      return Response.json(
+        { error: 'Unauthorized: Invalid token' },
+        { status: 401 }
+      );
+    }
+
+    // User is authenticated, proceed with transcription
     const { audioUrl } = await request.json();
 
     // Validate input
@@ -19,6 +44,7 @@ export async function POST(request: Request) {
     }
 
     // SSRF Protection: Validate URL is from Supabase Storage
+    // NOTE: If using custom domain, add it to allowed hosts here
     const supabaseProjectUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
     if (!supabaseProjectUrl) {
       console.error('EXPO_PUBLIC_SUPABASE_URL is not configured in API runtime');
@@ -53,6 +79,31 @@ export async function POST(request: Request) {
           expected_domain: supabaseDomain,
         },
         { status: 400 }
+      );
+    }
+
+    // Folder ownership validation: Verify URL path contains user's ID
+    // Expected format: /storage/v1/object/public/checkin-audio/{user_id}/{filename}
+    const pathParts = audioUrlParsed.pathname.split('/');
+    const bucketIndex = pathParts.indexOf('checkin-audio');
+
+    if (bucketIndex === -1 || bucketIndex >= pathParts.length - 2) {
+      return Response.json(
+        { error: 'Invalid audio URL: incorrect folder structure' },
+        { status: 400 }
+      );
+    }
+
+    const folderUserId = pathParts[bucketIndex + 1];
+
+    if (folderUserId !== userData.user.id) {
+      console.warn('Unauthorized folder access attempt:', {
+        requestedUserId: folderUserId,
+        authenticatedUserId: userData.user.id,
+      });
+      return Response.json(
+        { error: 'Forbidden: You can only transcribe your own audio files' },
+        { status: 403 }
       );
     }
 
