@@ -7,7 +7,7 @@ import { useOnboardingStore } from '@/stores/onboardingStore';
 import { VoiceInput } from '@/components/onboarding/VoiceInput';
 
 export default function PainScreen() {
-  const { answers, setAnswer, setInputType } = useOnboardingStore();
+  const { answers, setAnswer, setInputType, setAudioUrl } = useOnboardingStore();
   const [localAnswer, setLocalAnswer] = useState(answers.pain);
 
   const handleNext = async () => {
@@ -48,6 +48,9 @@ export default function PainScreen() {
           }}
           onVoiceInputUsed={() => {
             setInputType('pain', 'voice');
+          }}
+          onAudioUrlReady={(url) => {
+            setAudioUrl('pain', url);
           }}
         />
       </View>

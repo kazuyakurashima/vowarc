@@ -383,6 +383,44 @@ CREATE TABLE onboarding_answers (
 
 ---
 
+## 未対応の問題（Phase B以降で実装）
+
+### Medium 1: 24h Immutability自動保証（Phase B）
+
+**問題点:**
+- 現在のTriggerは`UPDATE`時のみ発火
+- 24h経過での自動immutable化なし（cron job未実装）
+- Anti-Pattern編集機能がないMVPでは影響なし
+
+**実装オプション:**
+- Option A: Cron Job実装（定期的に24h経過したmemoryをimmutableに変換）
+- Option B: クライアント側で編集時にチェック（24h経過済みなら編集不可UI）
+- Option C: 現状維持（UPDATEトリガーのみ、厳密な保証なし）
+
+**推奨**: Option B（クライアント側チェック） - Cron不要、UX明確
+
+**実装タイミング**: Phase B（Anti-Pattern編集機能実装時）
+
+**依存関係**: なし（編集機能が実装されるまで問題は顕在化しない）
+
+---
+
+### Low: Input Type精度向上（Phase B）
+
+**問題点:**
+- 音声入力後にテキスト編集した場合も`input_type='voice'`のまま
+- アナリティクスで「音声入力率」が過大評価される可能性
+
+**改善案:**
+- 案A: テキスト編集時に`input_type='text'`に更新
+- 案B: `input_type_original`と`was_edited`フラグを追加（より正確な追跡）
+
+**実装タイミング**: Phase B（analytics強化時）
+
+**依存関係**: なし（現状でも機能は問題なく動作）
+
+---
+
 ## 完了条件
 
 ### Day0

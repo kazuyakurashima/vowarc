@@ -7,7 +7,7 @@ import { useOnboardingStore } from '@/stores/onboardingStore';
 import { VoiceInput } from '@/components/onboarding/VoiceInput';
 
 export default function IdealScreen() {
-  const { answers, setAnswer: saveAnswer, setInputType } = useOnboardingStore();
+  const { answers, setAnswer: saveAnswer, setInputType, setAudioUrl } = useOnboardingStore();
   const [localAnswer, setLocalAnswer] = useState(answers.ideal);
   const [loading, setLoading] = useState(false);
 
@@ -51,6 +51,9 @@ export default function IdealScreen() {
           }}
           onVoiceInputUsed={() => {
             setInputType('ideal', 'voice');
+          }}
+          onAudioUrlReady={(url) => {
+            setAudioUrl('ideal', url);
           }}
         />
       </View>

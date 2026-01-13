@@ -26,11 +26,12 @@ import { buildApiUrl } from '@/lib/api-config';
 type VoiceInputProps = {
   onTranscriptionComplete: (text: string) => void;
   onVoiceInputUsed?: () => void; // Callback when voice input is used
+  onAudioUrlReady?: (audioUrl: string) => void; // Callback with audio URL
 };
 
 type FlowStep = 'idle' | 'recording' | 'transcribing' | 'reviewing';
 
-export function VoiceInput({ onTranscriptionComplete, onVoiceInputUsed }: VoiceInputProps) {
+export function VoiceInput({ onTranscriptionComplete, onVoiceInputUsed, onAudioUrlReady }: VoiceInputProps) {
   const { user } = useAuth();
   const { recording, startRecording, stopRecording, cancelRecording } =
     useAudioRecording();
@@ -38,6 +39,7 @@ export function VoiceInput({ onTranscriptionComplete, onVoiceInputUsed }: VoiceI
   const [visible, setVisible] = useState(false);
   const [flowStep, setFlowStep] = useState<FlowStep>('idle');
   const [transcription, setTranscription] = useState('');
+  const [audioUrl, setAudioUrl] = useState<string>('');
 
   // Format duration as MM:SS
   const formatDuration = (ms: number): string => {
@@ -78,6 +80,7 @@ export function VoiceInput({ onTranscriptionComplete, onVoiceInputUsed }: VoiceI
 
       // Upload audio to Supabase Storage
       const url = await uploadAudioFile(user.id, uri);
+      setAudioUrl(url); // Store audio URL
 
       // Call Whisper API for transcription
       const apiUrl = buildApiUrl('/api/audio/transcribe');
@@ -127,7 +130,9 @@ export function VoiceInput({ onTranscriptionComplete, onVoiceInputUsed }: VoiceI
   const handleConfirm = () => {
     onTranscriptionComplete(transcription);
     onVoiceInputUsed?.(); // Notify that voice input was used
+    onAudioUrlReady?.(audioUrl); // Pass audio URL to parent
     setTranscription('');
+    setAudioUrl(''); // Clear audio URL
     setFlowStep('idle');
     setVisible(false);
   };

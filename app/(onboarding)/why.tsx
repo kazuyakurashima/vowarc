@@ -7,7 +7,7 @@ import { useOnboardingStore } from '@/stores/onboardingStore';
 import { VoiceInput } from '@/components/onboarding/VoiceInput';
 
 export default function WhyScreen() {
-  const { answers, setAnswer, setInputType } = useOnboardingStore();
+  const { answers, setAnswer, setInputType, setAudioUrl } = useOnboardingStore();
   const [localAnswer, setLocalAnswer] = useState(answers.why);
 
   const handleNext = async () => {
@@ -47,6 +47,9 @@ export default function WhyScreen() {
           }}
           onVoiceInputUsed={() => {
             setInputType('why', 'voice');
+          }}
+          onAudioUrlReady={(url) => {
+            setAudioUrl('why', url);
           }}
         />
       </View>

@@ -38,6 +38,7 @@ export async function POST(request: Request) {
     const {
       answers, // { why, pain, ideal }
       inputTypes, // { why, pain, ideal } - 'text' | 'voice'
+      audioUrls, // { why, pain, ideal } - Supabase Storage URLs (optional)
       meaningStatement,
       vow,
     } = await request.json();
@@ -67,18 +68,21 @@ export async function POST(request: Request) {
         question_key: 'why',
         answer: answers.why,
         input_type: inputTypes?.why || 'text',
+        audio_url: audioUrls?.why || null,
       }),
       serverClient.from('onboarding_answers').insert({
         user_id: userId,
         question_key: 'pain',
         answer: answers.pain,
         input_type: inputTypes?.pain || 'text',
+        audio_url: audioUrls?.pain || null,
       }),
       serverClient.from('onboarding_answers').insert({
         user_id: userId,
         question_key: 'ideal',
         answer: answers.ideal,
         input_type: inputTypes?.ideal || 'text',
+        audio_url: audioUrls?.ideal || null,
       }),
     ];
 

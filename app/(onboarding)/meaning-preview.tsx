@@ -8,7 +8,7 @@ import { buildApiUrl } from '@/lib/api-config';
 import { supabase } from '@/lib/supabase';
 
 export default function MeaningPreviewScreen() {
-  const { answers, inputTypes, generatedMeaning, generatedVow, setGeneratedMeaning, setGeneratedVow } = useOnboardingStore();
+  const { answers, inputTypes, audioUrls, generatedMeaning, generatedVow, setGeneratedMeaning, setGeneratedVow } = useOnboardingStore();
   const [meaningStatement, setMeaningStatement] = useState(generatedMeaning);
   const [vow, setVow] = useState(generatedVow);
   const [loading, setLoading] = useState(!generatedMeaning || !generatedVow);
@@ -97,6 +97,11 @@ export default function MeaningPreviewScreen() {
             why: inputTypes.why,
             pain: inputTypes.pain,
             ideal: inputTypes.ideal,
+          },
+          audioUrls: {
+            why: audioUrls.why,
+            pain: audioUrls.pain,
+            ideal: audioUrls.ideal,
           },
           meaningStatement,
           vow,

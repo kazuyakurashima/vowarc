@@ -14,11 +14,19 @@ interface InputTypes {
   ideal: InputType;
 }
 
+interface AudioUrls {
+  why: string;
+  pain: string;
+  ideal: string;
+}
+
 interface OnboardingStore {
   answers: OnboardingAnswer;
   inputTypes: InputTypes;
+  audioUrls: AudioUrls;
   setAnswer: (key: keyof OnboardingAnswer, value: string) => void;
   setInputType: (key: keyof InputTypes, type: InputType) => void;
+  setAudioUrl: (key: keyof AudioUrls, url: string) => void;
   clearAnswers: () => void;
   generatedMeaning: string;
   generatedVow: string;
@@ -37,6 +45,11 @@ export const useOnboardingStore = create<OnboardingStore>((set) => ({
     pain: 'text',
     ideal: 'text',
   },
+  audioUrls: {
+    why: '',
+    pain: '',
+    ideal: '',
+  },
   setAnswer: (key, value) =>
     set((state) => ({
       answers: {
@@ -51,6 +64,13 @@ export const useOnboardingStore = create<OnboardingStore>((set) => ({
         [key]: type,
       },
     })),
+  setAudioUrl: (key, url) =>
+    set((state) => ({
+      audioUrls: {
+        ...state.audioUrls,
+        [key]: url,
+      },
+    })),
   clearAnswers: () =>
     set({
       answers: {
@@ -62,6 +82,11 @@ export const useOnboardingStore = create<OnboardingStore>((set) => ({
         why: 'text',
         pain: 'text',
         ideal: 'text',
+      },
+      audioUrls: {
+        why: '',
+        pain: '',
+        ideal: '',
       },
       generatedMeaning: '',
       generatedVow: '',
