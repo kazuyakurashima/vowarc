@@ -63,17 +63,13 @@ export default function Day21ChoiceScreen() {
 
               await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
 
-              // Navigate to exit ritual (MVP: simple confirmation)
-              Alert.alert(
-                'お疲れさまでした',
-                '21日間、自分と向き合い続けたことは事実です。\nいつでも戻ってきてください。',
-                [
-                  {
-                    text: '終了',
-                    onPress: () => router.replace('/(tabs)'),
-                  },
-                ]
-              );
+              // Navigate to Exit Ritual flow
+              router.push({
+                pathname: '/(day21)/exit-summary',
+                params: {
+                  trigger: 'day21_stop',
+                },
+              });
             } catch (error) {
               await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
               Alert.alert('エラー', '処理に失敗しました。もう一度お試しください。');

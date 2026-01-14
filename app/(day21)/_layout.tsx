@@ -24,6 +24,9 @@ export default function Day21Layout() {
       <Stack.Screen name="choice" />
       <Stack.Screen name="payment-confirm" />
       <Stack.Screen name="payment-success" />
+      <Stack.Screen name="exit-summary" />
+      <Stack.Screen name="exit-review" />
+      <Stack.Screen name="exit-complete" />
     </Stack>
   );
 }
