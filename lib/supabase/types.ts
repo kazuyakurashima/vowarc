@@ -3,7 +3,7 @@
  * Based on ticket 001 schema definition
  */
 
-export type UserPhase = 'day0' | 'trial' | 'paid' | 'completed' | 'terminated';
+export type UserPhase = 'day0' | 'trial' | 'paid' | 'completed' | 'terminated' | 'paused';
 
 export type CheckinType = 'morning' | 'evening' | 'voice' | 'text';
 
@@ -219,4 +219,45 @@ export interface EvidenceUpdate {
   title?: string;
   content?: string | null;
   ai_highlight_score?: number | null;
+}
+
+// ============================================
+// Cognitive Map Types (Ticket 011)
+// ============================================
+
+export type MapNodeType = 'vow' | 'meaning' | 'value' | 'strength' | 'anti_pattern' | 'achievement';
+export type MapNodeSourceType = 'day0' | 'meaning_forge' | 'evidence' | 'manual';
+
+export interface MapNode {
+  id: string;
+  user_id: string;
+  type: MapNodeType;
+  content: string;
+  source_type: MapNodeSourceType | null;
+  source_id: string | null;
+  version: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MapNodeVersion {
+  id: string;
+  node_id: string;
+  version: number;
+  content: string;
+  edited_at: string;
+}
+
+export interface MapNodeInsert {
+  user_id: string;
+  type: MapNodeType;
+  content: string;
+  source_type?: MapNodeSourceType;
+  source_id?: string;
+}
+
+export interface MapNodeUpdate {
+  content?: string;
+  is_active?: boolean;
 }

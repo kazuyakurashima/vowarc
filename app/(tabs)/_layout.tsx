@@ -3,6 +3,7 @@ import React from 'react';
 
 import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
+import { ViolationChecker } from '@/components/violation';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
@@ -10,6 +11,7 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
+    <ViolationChecker>
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
@@ -31,10 +33,16 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="cognitive-map"
+        options={{
+          title: 'Map',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="brain.head.profile" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          href: null, // Hide from tab bar - replaced by cognitive-map
         }}
       />
       <Tabs.Screen
@@ -56,5 +64,6 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+    </ViolationChecker>
   );
 }

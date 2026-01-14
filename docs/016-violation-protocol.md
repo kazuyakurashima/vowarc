@@ -221,7 +221,13 @@ async function detectAbsence(userId: string): Promise<boolean> {
 
 ### 虚偽報告検出（AI支援）
 
+> **⚠️ MVP実装状況**: この機能はMVPでは未実装です。
+> `false_report` 違反タイプはスキーマに定義されていますが、自動検出は行われません。
+> MVPでは、管理者/コーチが手動で `violation_logs` に INSERT して対応します。
+> AI分析による自動検出は将来バージョンで実装予定です。
+
 ```typescript
+// FUTURE FEATURE - Not implemented in MVP
 async function detectFalseReport(
   userId: string,
   recentStatements: string[]

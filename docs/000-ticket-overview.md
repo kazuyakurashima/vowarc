@@ -27,9 +27,9 @@ requirements.mdで「必須」と定義された機能群。最小限の実装�
 | [008-payment-system](./008-payment-system.md) | 課金システム（**9週間パッケージ・買い切り**） | 高 | ✅ 完了 |
 | [009-evidence-journal-basic](./009-evidence-journal-basic.md) | Evidence Journal（基本版：画像/URL/メモ保存） | 高 | ✅ 完了 |
 | [010-small-wins-basic](./010-small-wins-basic.md) | Small Wins Dashboard（基本版：**If-Then発動率含む**プロセスメトリクス） | 中 | ✅ 完了 |
-| [011-cognitive-map-basic](./011-cognitive-map-basic.md) | Cognitive Map（簡易版：リスト形式） | 中 | 未着手 |
+| [011-cognitive-map-basic](./011-cognitive-map-basic.md) | Cognitive Map（簡易版：リスト形式） | 中 | ✅ 完了 |
 | [012-exit-ritual-basic](./012-exit-ritual-basic.md) | Exit Ritual（基本版：学び回収・解約レビュー） | 中 | ✅ 完了 |
-| [016-violation-protocol](./016-violation-protocol.md) | **契約違反プロトコル（MVP版：Warning→Renegotiation）** | 中 | 未着手 |
+| [016-violation-protocol](./016-violation-protocol.md) | **契約違反プロトコル（MVP版：Warning→Renegotiation）** | 中 | ✅ 完了 |
 
 ### Phase B: 拡張機能
 
