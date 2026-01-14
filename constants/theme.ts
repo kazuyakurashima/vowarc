@@ -1,5 +1,5 @@
 /**
- * VowArk Design System v0.1 - Theme
+ * VowArc Design System v0.1 - Theme
  *
  * Consolidated theme file that exports all design tokens.
  * Based on Design DNA: Quiet Luxury, Tough Love, Integrity
@@ -30,7 +30,7 @@ export const Colors = {
     tabIconSelected: colors.accent,
   },
   dark: {
-    // Note: VowArk v0.1 focuses on light mode only
+    // Note: VowArc v0.1 focuses on light mode only
     // Dark mode support is planned for future iterations
     text: '#ECEDEE',
     background: '#151718',

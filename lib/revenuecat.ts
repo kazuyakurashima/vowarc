@@ -1,5 +1,5 @@
 /**
- * VowArk RevenueCat Configuration
+ * VowArc RevenueCat Configuration
  *
  * Initializes RevenueCat SDK for in-app purchases
  * Based on Ticket 008 specification (Non-Renewing Subscription)

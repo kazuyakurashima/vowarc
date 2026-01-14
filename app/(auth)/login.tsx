@@ -41,7 +41,7 @@ export default function LoginScreen() {
       style={styles.container}
     >
       <View style={styles.content}>
-        <Text style={styles.title}>VowArk</Text>
+        <Text style={styles.title}>VowArc</Text>
         <Text style={styles.subtitle}>意志を、物語に変える</Text>
 
         <View style={styles.form}>

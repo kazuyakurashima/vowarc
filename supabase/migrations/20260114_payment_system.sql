@@ -1,4 +1,4 @@
--- VowArk Payment System Schema
+-- VowArc Payment System Schema
 -- Based on Ticket 008 specification
 -- Non-Renewing Subscription model for 9-week coaching package
 

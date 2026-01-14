@@ -1,5 +1,5 @@
 /**
- * VowArk Card Component
+ * VowArc Card Component
  *
  * Design System v0.1 compliant card with two variants:
  * - Standard: Surface background with subtle border

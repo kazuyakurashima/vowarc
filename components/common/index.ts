@@ -1,5 +1,5 @@
 /**
- * VowArk Common Components
+ * VowArc Common Components
  *
  * Export all common UI components that follow Design System v0.1
  */

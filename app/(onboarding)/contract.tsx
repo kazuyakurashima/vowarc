@@ -52,11 +52,11 @@ export default function ContractScreen() {
       <Text style={styles.title}>心理的契約</Text>
 
       <Text style={styles.subtitle}>
-        VowArkは、あなたの3ヶ月の旅に伴走します
+        VowArcは、あなたの3ヶ月の旅に伴走します
       </Text>
 
       <View style={styles.contractBox}>
-        <Text style={styles.contractTitle}>VowArkがあなたに約束すること</Text>
+        <Text style={styles.contractTitle}>VowArcがあなたに約束すること</Text>
 
         <View style={styles.contractItem}>
           <Text style={styles.bullet}>•</Text>

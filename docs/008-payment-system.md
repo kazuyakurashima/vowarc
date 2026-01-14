@@ -323,7 +323,7 @@ CREATE INDEX idx_exit_reviews_user ON exit_reviews(user_id);
 
 ```
 RevenueCat Dashboard
-├── Project: VowArk
+├── Project: VowArc
 ├── Apps:
 │   ├── iOS: vowark-ios (App Store Connect連携)
 │   └── Android: vowark-android (Google Play連携) ← Phase 2
@@ -342,7 +342,7 @@ App Store Connect
 ├── In-App Purchases
 │   └── vowark_coaching_9weeks
 │       ├── Type: Non-Renewing Subscription ← 専用タイプを使用
-│       ├── Reference Name: VowArk 9週間コーチング
+│       ├── Reference Name: VowArc 9週間コーチング
 │       ├── Product ID: vowark_coaching_9weeks
 │       ├── Duration: Server-managed (63 days)
 │       └── Price: ¥19,800
@@ -1160,7 +1160,7 @@ paid → trial:
 
 ## ユーザー安心ポイント
 
-| 従来のサブスク | VowArkの買い切り |
+| 従来のサブスク | VowArcの買い切り |
 |--------------|-----------------|
 | 解約を忘れると課金継続 | **解約手続き不要** |
 | 毎週/毎月の請求 | **一度だけの支払い** |

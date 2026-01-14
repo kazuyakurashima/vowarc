@@ -1,4 +1,4 @@
-// VowArk Purchase Status API
+// VowArc Purchase Status API
 // Supabase Edge Function for checking user's purchase status
 
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';

@@ -1,4 +1,4 @@
-// VowArk RevenueCat Webhook Handler
+// VowArc RevenueCat Webhook Handler
 // Supabase Edge Function for processing purchase and refund events
 // Based on Ticket 008 specification
 

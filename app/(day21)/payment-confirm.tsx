@@ -176,7 +176,7 @@ export default function PaymentConfirmScreen() {
         {/* Product Card */}
         <View style={styles.productCard}>
           <View style={styles.productHeader}>
-            <Text style={styles.productTitle}>VowArk 9週間コーチング</Text>
+            <Text style={styles.productTitle}>VowArc 9週間コーチング</Text>
             <View style={styles.badge}>
               <Text style={styles.badgeText}>買い切り</Text>
             </View>

@@ -1,5 +1,5 @@
 /**
- * VowArk TextInput Component
+ * VowArc TextInput Component
  *
  * Design System v0.1 compliant text input with:
  * - Standard single-line input

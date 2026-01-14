@@ -1,5 +1,5 @@
 /**
- * VowArk Design System v0.1 - Elevation Tokens
+ * VowArc Design System v0.1 - Elevation Tokens
  *
  * Elevation Philosophy:
  * - NO drop shadows (anti-pattern for Quiet Luxury)

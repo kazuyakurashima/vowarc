@@ -1,5 +1,5 @@
 /**
- * VowArk Design System v0.1 - Transition Tokens
+ * VowArc Design System v0.1 - Transition Tokens
  *
  * Transition Philosophy:
  * - Standard: Quick, responsive interactions

@@ -54,7 +54,7 @@ export default function RegisterScreen() {
       style={styles.container}
     >
       <View style={styles.content}>
-        <Text style={styles.title}>VowArk</Text>
+        <Text style={styles.title}>VowArc</Text>
         <Text style={styles.subtitle}>21日間のトライアル後、継続する場合は{'\n'}9週間一括¥19,800です</Text>
 
         <View style={styles.form}>

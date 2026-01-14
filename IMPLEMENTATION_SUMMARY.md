@@ -1,4 +1,4 @@
-# VowArk Foundation Implementation Summary
+# VowArc Foundation Implementation Summary
 
 ## Ticket 001 - Foundation Setup: COMPLETED
 
@@ -8,7 +8,7 @@ Date: 2026-01-10
 
 ## Implementation Overview
 
-Successfully implemented the foundational infrastructure for VowArk MVP, including database schema, design system tokens, authentication, and core UI components.
+Successfully implemented the foundational infrastructure for VowArc MVP, including database schema, design system tokens, authentication, and core UI components.
 
 ---
 

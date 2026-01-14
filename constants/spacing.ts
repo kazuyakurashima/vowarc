@@ -1,5 +1,5 @@
 /**
- * VowArk Design System v0.1 - Spacing Tokens
+ * VowArc Design System v0.1 - Spacing Tokens
  *
  * Spacing Philosophy:
  * - Type-to-Space Ratio: 15:85 (generous whitespace)

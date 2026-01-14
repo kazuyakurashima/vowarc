@@ -1,5 +1,5 @@
 /**
- * VowArk Authentication Hook
+ * VowArc Authentication Hook
  *
  * Provides authentication state and methods using Supabase Auth
  */

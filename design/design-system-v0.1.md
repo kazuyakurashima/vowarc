@@ -1,8 +1,8 @@
-# VowArk Design System v0.1
+# VowArc Design System v0.1
 
 ## 概要
 
-VowArkは「3ヶ月で自己変革を達成する」コミットメント型AIコーチングアプリ。
+VowArcは「3ヶ月で自己変革を達成する」コミットメント型AIコーチングアプリ。
 本ドキュメントはDesign DNA、Tokens、Components、Copy Guidelinesを定義する。
 
 ---

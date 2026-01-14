@@ -50,7 +50,7 @@ export default function PaymentSuccessScreen() {
 
         {/* Info Card */}
         <View style={styles.infoCard}>
-          <Text style={styles.infoTitle}>VowArk 9週間コーチング</Text>
+          <Text style={styles.infoTitle}>VowArc 9週間コーチング</Text>
 
           {expiresAt && (
             <View style={styles.infoRow}>

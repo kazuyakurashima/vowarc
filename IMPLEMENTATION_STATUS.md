@@ -1,4 +1,4 @@
-# VowArk Implementation Status
+# VowArc Implementation Status
 
 ## Completed (Tickets 001-005 Progress)
 
@@ -157,7 +157,7 @@ npm start
 ## Architecture
 
 ```
-VowArk/
+VowArc/
 ├── app/                      # Expo Router screens
 │   ├── (auth)/              # Authentication screens
 │   ├── (onboarding)/        # Day 0 onboarding

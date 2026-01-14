@@ -1,5 +1,5 @@
 /**
- * VowArk Design System v0.1 - Haptics Tokens
+ * VowArc Design System v0.1 - Haptics Tokens
  *
  * Haptic Philosophy:
  * - Light: Regular taps, navigation

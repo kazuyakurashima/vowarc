@@ -1,4 +1,4 @@
--- VowArk Initial Database Schema
+-- VowArc Initial Database Schema
 -- Based on Ticket 001 specification
 
 -- Enable UUID extension

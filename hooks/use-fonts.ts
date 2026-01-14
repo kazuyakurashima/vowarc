@@ -1,5 +1,5 @@
 /**
- * VowArk Font Loading Hook
+ * VowArc Font Loading Hook
  *
  * Loads custom fonts for the design system:
  * - Noto Serif JP (Light) - for headings
@@ -21,7 +21,7 @@ import {
   Inter_600SemiBold,
 } from '@expo-google-fonts/inter';
 
-export function useVowArkFonts() {
+export function useVowArcFonts() {
   const [fontsLoaded] = useFonts({
     // Noto Serif JP - for headings
     'NotoSerifJP-Light': NotoSerifJP_300Light,

@@ -1,5 +1,5 @@
 /**
- * VowArk Design System v0.1 - Typography Tokens
+ * VowArc Design System v0.1 - Typography Tokens
  *
  * Font Philosophy:
  * - Headings: Noto Serif JP Light (with generous line-height for Japanese "ma" - space/pause)

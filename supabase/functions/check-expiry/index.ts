@@ -1,4 +1,4 @@
-// VowArk Purchase Expiry Check
+// VowArc Purchase Expiry Check
 // Supabase Edge Function for processing expired purchases (called by cron)
 // Based on Ticket 008 specification
 

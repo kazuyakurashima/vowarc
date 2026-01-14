@@ -1,6 +1,6 @@
 /**
  * Theme Design Tokens - Central Export
- * Quiet Luxury Design System for VowArk
+ * Quiet Luxury Design System for VowArc
  */
 
 export { colors, elevation } from './colors';

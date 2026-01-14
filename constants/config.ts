@@ -1,5 +1,5 @@
 /**
- * VowArk Configuration
+ * VowArc Configuration
  * Platform-specific API endpoints and configuration
  */
 

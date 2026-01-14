@@ -1,5 +1,5 @@
 /**
- * VowArk Button Component
+ * VowArc Button Component
  *
  * Design System v0.1 compliant button with three variants:
  * - Primary: Accent background (Warm Coral or Deep Gold for Day21)

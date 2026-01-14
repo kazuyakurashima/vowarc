@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "VowArk",
-    "slug": "VowArk",
+    "name": "VowArc",
+    "slug": "VowArc",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "vowark",
+    "scheme": "vowarc",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {

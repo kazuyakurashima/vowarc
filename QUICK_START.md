@@ -1,4 +1,4 @@
-# VowArk Quick Start Guide
+# VowArc Quick Start Guide
 
 ## Foundation Setup Complete ✅
 
@@ -150,4 +150,4 @@ npx expo start -c  # Clear cache
 Implemented by Claude Sonnet 4.5
 Date: 2026-01-10
 
-Ready to build VowArk MVP! 🚀
+Ready to build VowArc MVP! 🚀

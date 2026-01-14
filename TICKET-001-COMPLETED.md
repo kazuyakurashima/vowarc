@@ -7,7 +7,7 @@
 
 ## Summary
 
-Successfully implemented the complete foundation for VowArk MVP, including:
+Successfully implemented the complete foundation for VowArc MVP, including:
 - Supabase configuration and database schema
 - Design System v0.1 (all design tokens)
 - Font system with Japanese and English typography
@@ -220,7 +220,7 @@ await signOut();
 
 ### 2. App Integration (Required before testing)
 - [ ] Update `app/_layout.tsx` to include AuthProvider
-- [ ] Update `app/_layout.tsx` to load fonts with useVowArkFonts
+- [ ] Update `app/_layout.tsx` to load fonts with useVowArcFonts
 - [ ] Test authentication flow
 - [ ] Test font loading on iOS/Android
 
@@ -284,7 +284,7 @@ await signOut();
 ## File Paths Reference
 
 ```
-📁 VowArk/
+📁 VowArc/
 ├── 📁 lib/
 │   └── supabase.ts                    # Supabase client
 ├── 📁 types/

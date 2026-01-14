@@ -1,8 +1,8 @@
-# VowArk Setup Guide
+# VowArc Setup Guide
 
 ## Ticket 001: Foundation Setup - Completed
 
-This guide covers the foundation setup completed for VowArk MVP.
+This guide covers the foundation setup completed for VowArc MVP.
 
 ---
 
@@ -139,11 +139,11 @@ Update `/app/_layout.tsx` to include the AuthProvider:
 
 ```tsx
 import { AuthProvider } from '@/contexts/AuthContext';
-import { useVowArkFonts } from '@/hooks/use-fonts';
+import { useVowArcFonts } from '@/hooks/use-fonts';
 import * as SplashScreen from 'expo-splash-screen';
 
 export default function RootLayout() {
-  const fontsLoaded = useVowArkFonts();
+  const fontsLoaded = useVowArcFonts();
 
   useEffect(() => {
     if (fontsLoaded) {
@@ -283,7 +283,7 @@ Now that the foundation is complete, you can proceed with:
 ## File Structure
 
 ```
-VowArk/
+VowArc/
 ├── app/                        # Expo Router screens
 ├── components/
 │   └── common/                # Common UI components
@@ -325,7 +325,7 @@ VowArk/
 Make sure to:
 1. Clear Expo cache: `npx expo start -c`
 2. Check that fonts are properly imported in `_layout.tsx`
-3. Use `useVowArkFonts()` hook before rendering
+3. Use `useVowArcFonts()` hook before rendering
 
 ### Supabase connection issues
 

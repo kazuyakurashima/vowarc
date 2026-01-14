@@ -1,5 +1,5 @@
 /**
- * VowArk Purchase Hook
+ * VowArc Purchase Hook
  *
  * Manages purchase state and operations for the 9-week coaching package
  * Based on Ticket 008 specification (Non-Renewing Subscription)

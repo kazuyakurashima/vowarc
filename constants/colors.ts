@@ -1,5 +1,5 @@
 /**
- * VowArk Design System v0.1 - Color Tokens
+ * VowArc Design System v0.1 - Color Tokens
  *
  * Color Ratio Philosophy:
  * - 90%: background / surface (Ecru / Pearl)
