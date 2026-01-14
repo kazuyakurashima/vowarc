@@ -298,7 +298,7 @@ CREATE TABLE exit_reviews (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID REFERENCES users(id) NOT NULL,
   purchase_id UUID REFERENCES purchases(id),  -- 関連する購入（あれば）
-  exit_type VARCHAR(50) NOT NULL,             -- 'graduation' | 'trial_stop' | 'refund'
+  exit_type VARCHAR(50) NOT NULL,             -- 'graduation' | 'trial_stop' | 'refund' | 'cancellation'
   reason_category VARCHAR(100),
   free_text TEXT,
   expected_vs_reality TEXT,

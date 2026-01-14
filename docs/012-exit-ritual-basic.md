@@ -158,8 +158,11 @@ CREATE TABLE exit_rituals (
 
 ```sql
 -- 008-payment-system.md で定義済み
--- exit_type: 'graduation' | 'trial_stop' | 'refund'
--- Exit Ritualの場合は exit_type = 'trial_stop' または 'graduation'
+-- exit_type: 'graduation' | 'trial_stop' | 'refund' | 'cancellation'
+--   - trial_stop: Day21で停止
+--   - cancellation: 有料期間中のユーザー主導解約
+--   - refund: Webhookで検知した実返金イベント
+--   - graduation: 9週間完了時の卒業
 
 -- exit_ritual_id を追加する場合の拡張（オプション）
 ALTER TABLE exit_reviews
