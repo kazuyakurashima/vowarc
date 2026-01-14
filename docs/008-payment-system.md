@@ -447,9 +447,9 @@ export async function POST(request: Request) {
     // タイムアウト → 監視用に failed_timeout をログし、再試行を許可
     console.warn(`Stale processing detected for event ${eventId}, marking as timed out`);
 
-    // 可観測性向上: stale状態を failed_timeout として記録
+    // 可観測性向上: stale状態を failed として記録
     // started_at も条件に含めることで、別リクエストが処理を再開した場合の上書きを防ぐ
-    await supabase
+    const { data: staleUpdateResult } = await supabase
       .from('webhook_events')
       .update({
         status: 'failed',
@@ -457,8 +457,16 @@ export async function POST(request: Request) {
       })
       .eq('id', existingEvent.id)
       .eq('status', 'processing')
-      .eq('started_at', existingEvent.started_at);  // 楽観的ロック: started_at も一致を確認
-    // ↑ 更新結果は無視（他リクエストが先に更新していても問題ない）
+      .eq('started_at', existingEvent.started_at)
+      .select('id')
+      .maybeSingle();
+
+    if (staleUpdateResult) {
+      // 更新成功 → ローカル変数も更新して後続のUPDATE条件を一致させる
+      existingEvent.status = 'failed';
+    }
+    // 更新失敗 = 別リクエストが先に状態を変更済み → existingEvent.status は古いまま
+    // → 後続のUPDATE条件で不一致となり、適切に競合検出される
   }
 
   // 処理中/失敗のイベントを記録または更新
