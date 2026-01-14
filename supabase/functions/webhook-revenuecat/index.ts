@@ -251,6 +251,15 @@ async function handlePurchase(supabase: any, event: any) {
     return;
   }
 
+  // Calculate price (JPY is already in smallest unit, other currencies need conversion)
+  const currency = event.currency || 'JPY';
+  const zerDecimalCurrencies = ['JPY', 'KRW', 'VND']; // Currencies without decimal places
+  const pricePaid = event.price
+    ? zerDecimalCurrencies.includes(currency)
+      ? Math.round(event.price) // JPY: use as-is (¥19800 → 19800)
+      : Math.round(event.price * 100) // USD etc: convert to cents ($19.80 → 1980)
+    : 19800; // Default fallback
+
   // Insert purchase record
   const { error: insertError } = await supabase.from('purchases').insert({
     user_id: userId,
@@ -259,8 +268,8 @@ async function handlePurchase(supabase: any, event: any) {
     product_id: event.product_id,
     store: event.store === 'APP_STORE' ? 'app_store' : 'play_store',
     status: 'active',
-    price_paid: event.price ? Math.round(event.price * 100) : 19800, // Convert to cents/yen
-    currency: event.currency || 'JPY',
+    price_paid: pricePaid,
+    currency,
     purchased_at: purchasedAt.toISOString(),
     expires_at: expiresAt.toISOString(),
   });

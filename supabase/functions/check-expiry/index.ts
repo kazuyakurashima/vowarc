@@ -73,27 +73,40 @@ serve(async (req: Request) => {
           continue;
         }
 
-        // Update user phase to completed (graduation)
-        const { error: updateUserError } = await supabase
-          .from('users')
-          .update({
-            current_phase: 'completed',
-            purchase_expires_at: null,
-          })
-          .eq('id', purchase.user_id)
-          .eq('current_phase', 'paid'); // Only if still paid
+        // Check if user has any other active purchases before marking as completed
+        const { data: otherActivePurchases } = await supabase
+          .from('purchases')
+          .select('id')
+          .eq('user_id', purchase.user_id)
+          .eq('status', 'active')
+          .gt('expires_at', now.toISOString())
+          .limit(1);
 
-        if (updateUserError) {
-          console.error(`Failed to update user ${purchase.user_id}:`, updateUserError);
-          // Don't count as error - purchase was updated
+        // Only update user phase if no other active purchases exist
+        if (!otherActivePurchases || otherActivePurchases.length === 0) {
+          const { error: updateUserError } = await supabase
+            .from('users')
+            .update({
+              current_phase: 'completed',
+              purchase_expires_at: null,
+            })
+            .eq('id', purchase.user_id)
+            .eq('current_phase', 'paid'); // Only if still paid
+
+          if (updateUserError) {
+            console.error(`Failed to update user ${purchase.user_id}:`, updateUserError);
+            // Don't count as error - purchase was updated
+          }
+
+          // Create graduation exit review record only if actually graduating
+          await supabase.from('exit_reviews').insert({
+            user_id: purchase.user_id,
+            purchase_id: purchase.id,
+            exit_type: 'graduation',
+          });
+        } else {
+          console.log(`User ${purchase.user_id} has other active purchases, skipping phase update`);
         }
-
-        // Create graduation exit review record
-        await supabase.from('exit_reviews').insert({
-          user_id: purchase.user_id,
-          purchase_id: purchase.id,
-          exit_type: 'graduation',
-        });
 
         processedCount++;
         console.log(`Processed expiry for purchase ${purchase.id}, user ${purchase.user_id}`);

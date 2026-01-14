@@ -28,7 +28,7 @@ export default function PaymentConfirmScreen() {
     signed?: string;
   }>();
 
-  const { purchase, loading: purchaseLoading, error: purchaseError, package: pkg } = usePurchase();
+  const { purchase, restore, loading: purchaseLoading, error: purchaseError, package: pkg } = usePurchase();
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handlePurchase = async () => {
@@ -37,7 +37,7 @@ export default function PaymentConfirmScreen() {
     try {
       setIsProcessing(true);
 
-      // Execute purchase
+      // Step 1: Execute purchase
       const success = await purchase();
 
       if (!success) {
@@ -46,22 +46,29 @@ export default function PaymentConfirmScreen() {
         return;
       }
 
-      // Complete Day21 with continue choice
-      const toughLoveAreas = params.toughLoveAreas?.split(',').filter(Boolean) || [];
-      const intensity = (params.toughLoveIntensity as ToughLoveIntensity) || 'standard';
+      // Step 2: Complete Day21 (non-critical - purchase already succeeded)
+      try {
+        const toughLoveAreas = params.toughLoveAreas?.split(',').filter(Boolean) || [];
+        const intensity = (params.toughLoveIntensity as ToughLoveIntensity) || 'standard';
 
-      await completeDay21({
-        choice: 'continue',
-        updatedVow: params.updatedVow,
-        toughLoveSettings: {
-          areas: toughLoveAreas,
-          intensity,
-        },
-      });
+        await completeDay21({
+          choice: 'continue',
+          updatedVow: params.updatedVow,
+          toughLoveSettings: {
+            areas: toughLoveAreas,
+            intensity,
+          },
+        });
+      } catch (day21Error) {
+        // Day21 completion failed, but purchase succeeded
+        // Log error but proceed to success screen
+        console.error('Day21 completion failed after purchase:', day21Error);
+        // The webhook will update user phase to 'paid' anyway
+      }
 
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
-      // Navigate to success screen
+      // Navigate to success screen (purchase succeeded regardless of Day21 status)
       router.replace({
         pathname: '/(day21)/payment-success',
         params: {
@@ -89,7 +96,6 @@ export default function PaymentConfirmScreen() {
   const handleRestore = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 
-    // Navigate to restore flow (for users who already purchased)
     Alert.alert(
       '購入を復元',
       '以前に購入したことがある場合、復元できます。',
@@ -98,8 +104,38 @@ export default function PaymentConfirmScreen() {
         {
           text: '復元する',
           onPress: async () => {
-            // TODO: Implement restore flow
-            Alert.alert('復元機能', '復元機能は準備中です。');
+            try {
+              setIsProcessing(true);
+              const hasActivePurchase = await restore();
+
+              if (hasActivePurchase) {
+                await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+                Alert.alert(
+                  '復元完了',
+                  '購入が復元されました。',
+                  [
+                    {
+                      text: 'OK',
+                      onPress: () => router.replace('/(tabs)'),
+                    },
+                  ]
+                );
+              } else {
+                await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+                Alert.alert(
+                  '購入が見つかりません',
+                  '復元可能な購入が見つかりませんでした。'
+                );
+              }
+            } catch (error) {
+              await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+              Alert.alert(
+                '復元エラー',
+                '購入の復元に失敗しました。もう一度お試しください。'
+              );
+            } finally {
+              setIsProcessing(false);
+            }
           },
         },
       ]
@@ -190,8 +226,8 @@ export default function PaymentConfirmScreen() {
         <View style={styles.policyNote}>
           <Text style={styles.policyTitle}>返金について</Text>
           <Text style={styles.policyText}>
-            購入後48時間以内であれば、Appleを通じて返金リクエストが可能です。
-            詳しくはApp Storeのサポートをご確認ください。
+            返金をご希望の場合は、Appleのサポートにお問い合わせください。
+            返金の可否はAppleの判断となります。
           </Text>
         </View>
 
