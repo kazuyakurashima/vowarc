@@ -25,6 +25,15 @@ ALTER TABLE exit_reviews
 ADD COLUMN exit_ritual_id UUID REFERENCES exit_rituals(id);
 
 -- ============================================
+-- ADD 'cancellation' TO EXIT_REVIEWS CHECK CONSTRAINT
+-- ============================================
+-- Drop existing constraint and recreate with new value
+ALTER TABLE exit_reviews DROP CONSTRAINT IF EXISTS exit_reviews_exit_type_check;
+ALTER TABLE exit_reviews
+ADD CONSTRAINT exit_reviews_exit_type_check
+CHECK (exit_type IN ('graduation', 'trial_stop', 'refund', 'cancellation'));
+
+-- ============================================
 -- ROW LEVEL SECURITY (RLS)
 -- ============================================
 ALTER TABLE exit_rituals ENABLE ROW LEVEL SECURITY;
@@ -46,6 +55,7 @@ CREATE POLICY "Service role can manage exit_rituals"
 
 -- ============================================
 -- HELPER FUNCTION: Get Exit Ritual Summary
+-- SECURITY: Validates that p_user_id matches auth.uid()
 -- ============================================
 CREATE OR REPLACE FUNCTION get_exit_ritual_summary(p_user_id UUID)
 RETURNS TABLE (
@@ -56,26 +66,29 @@ RETURNS TABLE (
   vow_content TEXT
 ) AS $$
 BEGIN
+  -- Security: Only allow users to query their own data
+  IF p_user_id != auth.uid() THEN
+    RAISE EXCEPTION 'Access denied: Cannot query other users data';
+  END IF;
+
   RETURN QUERY
   SELECT
-    -- Day count (from first checkin to now)
+    -- Day count (from trial_start_date, fallback to created_at)
     COALESCE(
-      EXTRACT(DAY FROM NOW() - MIN(c.created_at))::INTEGER + 1,
+      EXTRACT(DAY FROM NOW() - COALESCE(u.trial_start_date, u.created_at))::INTEGER + 1,
       0
     ) AS day_count,
     -- Checkin count
-    COUNT(DISTINCT c.id) AS checkin_count,
-    -- Evidence count (placeholder - will be updated when evidence table exists)
-    0::BIGINT AS evidence_count,
-    -- Meaning statement
+    (SELECT COUNT(*) FROM checkins WHERE user_id = p_user_id) AS checkin_count,
+    -- Evidence count (from evidences table)
+    (SELECT COUNT(*) FROM evidences WHERE user_id = p_user_id) AS evidence_count,
+    -- Meaning statement (is_current, not is_active)
     ms.content AS meaning_statement,
-    -- Vow content
+    -- Vow content (is_current, not is_active)
     v.content AS vow_content
   FROM users u
-  LEFT JOIN checkins c ON c.user_id = u.id
-  LEFT JOIN meaning_statements ms ON ms.user_id = u.id AND ms.is_active = true
-  LEFT JOIN vows v ON v.user_id = u.id AND v.is_active = true
-  WHERE u.id = p_user_id
-  GROUP BY ms.content, v.content;
+  LEFT JOIN meaning_statements ms ON ms.user_id = u.id AND ms.is_current = true
+  LEFT JOIN vows v ON v.user_id = u.id AND v.is_current = true
+  WHERE u.id = p_user_id;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

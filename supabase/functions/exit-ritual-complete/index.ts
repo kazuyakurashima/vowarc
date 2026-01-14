@@ -97,7 +97,8 @@ serve(async (req) => {
     }
 
     // Determine exit type based on trigger
-    const exitType = body.trigger === 'day21_stop' ? 'trial_stop' : 'refund';
+    // trial_stop: Day21で停止, cancellation: 有料期間中の解約（refundはWebhookで実際の返金イベント用）
+    const exitType = body.trigger === 'day21_stop' ? 'trial_stop' : 'cancellation';
 
     // Create exit review record
     const { error: reviewError } = await supabase
@@ -116,12 +117,11 @@ serve(async (req) => {
       // Don't fail the request if review insert fails
     }
 
-    // Update user phase to 'terminated'
+    // Update user current_phase to 'terminated'
     const { error: userUpdateError } = await supabase
       .from('users')
       .update({
-        phase: 'terminated',
-        updated_at: new Date().toISOString(),
+        current_phase: 'terminated',
       })
       .eq('id', user.id);
 

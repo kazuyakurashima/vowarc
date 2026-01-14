@@ -64,7 +64,7 @@ serve(async (req) => {
       // Fallback to direct query if function doesn't exist
       const { data: userData, error: userError } = await supabase
         .from('users')
-        .select('id, created_at')
+        .select('id, trial_start_date, created_at')
         .eq('id', user.id)
         .single();
 
@@ -76,39 +76,47 @@ serve(async (req) => {
         .select('id', { count: 'exact', head: true })
         .eq('user_id', user.id);
 
-      // Get meaning statement
+      // Get evidence count
+      const { count: evidenceCount } = await supabase
+        .from('evidences')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id);
+
+      // Get meaning statement (is_current, not is_active)
       const { data: meaningData } = await supabase
         .from('meaning_statements')
         .select('content')
         .eq('user_id', user.id)
-        .eq('is_active', true)
+        .eq('is_current', true)
         .single();
 
-      // Get vow
+      // Get vow (is_current, not is_active)
       const { data: vowData } = await supabase
         .from('vows')
         .select('content')
         .eq('user_id', user.id)
-        .eq('is_active', true)
+        .eq('is_current', true)
         .single();
 
-      // Calculate day count
-      const createdAt = new Date(userData.created_at);
+      // Calculate day count based on trial_start_date (fallback to created_at)
+      const startDate = userData.trial_start_date
+        ? new Date(userData.trial_start_date)
+        : new Date(userData.created_at);
       const now = new Date();
-      const dayCount = Math.floor((now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+      const dayCount = Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
 
       // Generate potential statement
       const potentialStatement = await generatePotentialStatement({
         day_count: dayCount,
         checkin_count: checkinCount || 0,
-        evidence_count: 0,
+        evidence_count: evidenceCount || 0,
         meaning_statement: meaningData?.content || null,
       });
 
       const summary: ExitSummary = {
         day_count: dayCount,
         checkin_count: checkinCount || 0,
-        evidence_count: 0,
+        evidence_count: evidenceCount || 0,
         potential_statement: potentialStatement,
         meaning_statement: meaningData?.content || null,
         vow_content: vowData?.content || null,
