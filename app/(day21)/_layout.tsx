@@ -22,6 +22,8 @@ export default function Day21Layout() {
       <Stack.Screen name="tough-love" />
       <Stack.Screen name="re-sign" />
       <Stack.Screen name="choice" />
+      <Stack.Screen name="payment-confirm" />
+      <Stack.Screen name="payment-success" />
     </Stack>
   );
 }

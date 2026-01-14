@@ -30,52 +30,16 @@ export default function Day21ChoiceScreen() {
   const handleContinue = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
 
-    Alert.alert(
-      '継続を確定しますか？',
-      '有料期間（3ヶ月）に進みます。',
-      [
-        { text: 'キャンセル', style: 'cancel' },
-        {
-          text: '継続する',
-          onPress: async () => {
-            try {
-              setIsSubmitting(true);
-
-              const toughLoveAreas = params.toughLoveAreas?.split(',').filter(Boolean) || [];
-              const intensity = (params.toughLoveIntensity as ToughLoveIntensity) || 'standard';
-
-              const result = await completeDay21({
-                choice: 'continue',
-                updatedVow: params.updatedVow,
-                toughLoveSettings: {
-                  areas: toughLoveAreas,
-                  intensity,
-                },
-              });
-
-              await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-
-              // Navigate to payment confirmation (MVP: just show success)
-              Alert.alert(
-                '継続が確定しました',
-                '有料期間が開始されます。\n（MVP: 決済画面は未実装）',
-                [
-                  {
-                    text: 'ホームへ',
-                    onPress: () => router.replace('/(tabs)'),
-                  },
-                ]
-              );
-            } catch (error) {
-              await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-              Alert.alert('エラー', '処理に失敗しました。もう一度お試しください。');
-            } finally {
-              setIsSubmitting(false);
-            }
-          },
-        },
-      ]
-    );
+    // Navigate to payment confirmation screen
+    router.push({
+      pathname: '/(day21)/payment-confirm',
+      params: {
+        updatedVow: params.updatedVow,
+        toughLoveAreas: params.toughLoveAreas,
+        toughLoveIntensity: params.toughLoveIntensity,
+        signed: params.signed,
+      },
+    });
   };
 
   const handleStop = async () => {

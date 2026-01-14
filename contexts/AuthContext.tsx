@@ -1,6 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
+import {
+  initializeRevenueCat,
+  setRevenueCatUserId,
+  logOutRevenueCat,
+} from '@/lib/revenuecat';
 
 interface AuthContextType {
   session: Session | null;
@@ -19,19 +24,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Initialize RevenueCat SDK
+    initializeRevenueCat().catch((err) => {
+      console.warn('RevenueCat initialization failed:', err);
+    });
+
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
+
+      // Set RevenueCat user ID if logged in
+      if (session?.user?.id) {
+        try {
+          await setRevenueCatUserId(session.user.id);
+        } catch (err) {
+          console.warn('Failed to set RevenueCat user ID:', err);
+        }
+      }
+
       setLoading(false);
     });
 
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
+
+      // Update RevenueCat user ID on auth change
+      if (session?.user?.id) {
+        try {
+          await setRevenueCatUserId(session.user.id);
+        } catch (err) {
+          console.warn('Failed to set RevenueCat user ID:', err);
+        }
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -54,6 +83,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
+    // Log out of RevenueCat first
+    try {
+      await logOutRevenueCat();
+    } catch (err) {
+      console.warn('Failed to log out of RevenueCat:', err);
+    }
+
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
   };
