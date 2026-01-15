@@ -1,14 +1,38 @@
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useHomeData } from '@/hooks/data/useHomeData';
+import { useAuth } from '@/hooks/auth';
 import { Button } from '@/components/ui/Button';
 import { SmallWinsSummary } from '@/components/dashboard/SmallWinsSummary';
 import { colors, spacing, typography, fontSizes } from '@/constants/theme';
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { signOut } = useAuth();
   const { user, vow, meaningStatement, commitments, loading, error } = useHomeData();
+
+  const handleLogout = async () => {
+    Alert.alert(
+      'ログアウト',
+      'ログアウトしますか？',
+      [
+        { text: 'キャンセル', style: 'cancel' },
+        {
+          text: 'ログアウト',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await signOut();
+            } catch (err) {
+              Alert.alert('エラー', 'ログアウトに失敗しました');
+            }
+          },
+        },
+      ]
+    );
+  };
 
   // Calculate day counter from trial_start_date
   const dayCounter = useMemo(() => {
@@ -40,75 +64,87 @@ export default function HomeScreen() {
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      {/* Day Counter */}
-      <View style={styles.dayCounterContainer}>
-        <Text style={styles.dayCounterLabel}>Day</Text>
-        <Text style={styles.dayCounterNumber}>{dayCounter}</Text>
-      </View>
-
-      {/* Meaning Statement */}
-      {meaningStatement && (
-        <View style={styles.meaningContainer}>
-          <Text style={styles.meaningLabel}>あなたの意味</Text>
-          <Text style={styles.meaningText}>{meaningStatement.content}</Text>
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <ScrollView contentContainerStyle={styles.content}>
+        {/* Day Counter */}
+        <View style={styles.dayCounterContainer}>
+          <Text style={styles.dayCounterLabel}>Day</Text>
+          <Text style={styles.dayCounterNumber}>{dayCounter}</Text>
         </View>
-      )}
 
-      {/* Vow */}
-      {vow && (
-        <View style={styles.vowContainer}>
-          <Text style={styles.vowLabel}>誓い</Text>
-          <Text style={styles.vowText}>{vow.content}</Text>
-        </View>
-      )}
-
-      {/* Small Wins Summary */}
-      <SmallWinsSummary />
-
-      {/* Today's Commitments */}
-      <View style={styles.commitmentsContainer}>
-        <Text style={styles.commitmentsLabel}>今日のコミットメント</Text>
-        {todayCommitments.length === 0 ? (
-          <Text style={styles.noCommitmentsText}>
-            今日のコミットメントはありません
-          </Text>
-        ) : (
-          todayCommitments.map((commitment) => (
-            <View key={commitment.id} style={styles.commitmentCard}>
-              <Text style={styles.commitmentText}>{commitment.content}</Text>
-              <View style={[
-                styles.commitmentStatus,
-                commitment.status === 'completed' && styles.commitmentCompleted,
-                commitment.status === 'failed' && styles.commitmentFailed,
-              ]}>
-                <Text style={styles.commitmentStatusText}>
-                  {commitment.status === 'completed' ? '完了' :
-                   commitment.status === 'failed' ? '未完了' : '進行中'}
-                </Text>
-              </View>
-            </View>
-          ))
+        {/* Meaning Statement */}
+        {meaningStatement && (
+          <View style={styles.meaningContainer}>
+            <Text style={styles.meaningLabel}>あなたの意味</Text>
+            <Text style={styles.meaningText}>{meaningStatement.content}</Text>
+          </View>
         )}
-      </View>
 
-      {/* Checkin Buttons */}
-      <View style={styles.checkinButtonsContainer}>
-        <Text style={styles.checkinLabel}>今日のチェックイン</Text>
-        <Button
-          title="テキストでチェックイン"
-          onPress={() => router.push('/(tabs)/checkin-text')}
-          variant="primary"
-          style={styles.checkinButton}
-        />
-        <Button
-          title="音声でチェックイン"
-          onPress={() => router.push('/(tabs)/checkin-voice')}
-          variant="secondary"
-          style={styles.checkinButton}
-        />
-      </View>
-    </ScrollView>
+        {/* Vow */}
+        {vow && (
+          <View style={styles.vowContainer}>
+            <Text style={styles.vowLabel}>誓い</Text>
+            <Text style={styles.vowText}>{vow.content}</Text>
+          </View>
+        )}
+
+        {/* Small Wins Summary */}
+        <SmallWinsSummary />
+
+        {/* Today's Commitments */}
+        <View style={styles.commitmentsContainer}>
+          <Text style={styles.commitmentsLabel}>今日のコミットメント</Text>
+          {todayCommitments.length === 0 ? (
+            <Text style={styles.noCommitmentsText}>
+              今日のコミットメントはありません
+            </Text>
+          ) : (
+            todayCommitments.map((commitment) => (
+              <View key={commitment.id} style={styles.commitmentCard}>
+                <Text style={styles.commitmentText}>{commitment.content}</Text>
+                <View style={[
+                  styles.commitmentStatus,
+                  commitment.status === 'completed' && styles.commitmentCompleted,
+                  commitment.status === 'failed' && styles.commitmentFailed,
+                ]}>
+                  <Text style={styles.commitmentStatusText}>
+                    {commitment.status === 'completed' ? '完了' :
+                     commitment.status === 'failed' ? '未完了' : '進行中'}
+                  </Text>
+                </View>
+              </View>
+            ))
+          )}
+        </View>
+
+        {/* Checkin Buttons */}
+        <View style={styles.checkinButtonsContainer}>
+          <Text style={styles.checkinLabel}>今日のチェックイン</Text>
+          <Button
+            title="テキストでチェックイン"
+            onPress={() => router.push('/(tabs)/checkin-text')}
+            variant="primary"
+            style={styles.checkinButton}
+          />
+          <Button
+            title="音声でチェックイン"
+            onPress={() => router.push('/(tabs)/checkin-voice')}
+            variant="secondary"
+            style={styles.checkinButton}
+          />
+        </View>
+
+        {/* Logout Button */}
+        <View style={styles.logoutContainer}>
+          <Button
+            title="ログアウト"
+            onPress={handleLogout}
+            variant="text"
+            style={styles.logoutButton}
+          />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -246,5 +282,14 @@ const styles = StyleSheet.create({
   },
   checkinButton: {
     marginBottom: spacing.md,
+  },
+  logoutContainer: {
+    marginTop: spacing.xxl,
+    paddingTop: spacing.lg,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+  },
+  logoutButton: {
+    alignSelf: 'center',
   },
 });

@@ -16,6 +16,7 @@ import {
   RefreshControl,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/hooks/auth';
 import { useEvidences } from '@/hooks/data/useEvidences';
 import { CreateEvidenceForm } from '@/components/evidence/CreateEvidenceForm';
@@ -100,7 +101,7 @@ export default function EvidenceScreen() {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Evidence Journal</Text>
@@ -140,7 +141,7 @@ export default function EvidenceScreen() {
           onCancel={() => setShowCreateModal(false)}
         />
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 }
 
