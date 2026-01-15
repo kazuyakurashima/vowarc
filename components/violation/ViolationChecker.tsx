@@ -99,11 +99,8 @@ export default function ViolationChecker({ children }: ViolationCheckerProps) {
         setCurrentViolation(null);
 
         // Navigate based on action
-        if (response.action === 'reduce_commitment') {
-          router.push('/(tabs)/commitment');
-        } else if (response.action === 'redesign_if_then') {
-          router.push('/(tabs)/if-then');
-        }
+        // TODO: Add commitment and if-then screens in future iterations
+        // For now, stay on current screen after warning acknowledgment
       } catch (error) {
         console.error('Error handling warning response:', error);
       }

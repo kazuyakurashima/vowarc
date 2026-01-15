@@ -12,7 +12,7 @@ import { colors, spacing, fontSizes } from '@/constants/theme';
 interface ButtonProps {
   onPress: () => void;
   title: string;
-  variant?: 'primary' | 'secondary' | 'text';
+  variant?: 'primary' | 'secondary' | 'outline' | 'text';
   size?: 'small' | 'medium' | 'large';
   loading?: boolean;
   disabled?: boolean;
@@ -78,6 +78,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.textSecondary,
   },
+  outline: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: colors.accent,
+  },
   text: {
     backgroundColor: 'transparent',
   },
@@ -105,6 +110,10 @@ const styles = StyleSheet.create({
   },
   secondaryText: {
     color: colors.textPrimary,
+    fontSize: fontSizes.base,
+  },
+  outlineText: {
+    color: colors.accent,
     fontSize: fontSizes.base,
   },
   textText: {

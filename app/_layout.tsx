@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
@@ -6,29 +6,90 @@ import 'react-native-reanimated';
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { ErrorBoundary } from '@/components/ui';
 import { colors } from '@/constants/theme';
+import { supabase } from '@/lib/supabase';
 
 function RootLayoutNav() {
   const { user, loading } = useAuth();
   const segments = useSegments();
   const router = useRouter();
+  const [onboardingChecked, setOnboardingChecked] = useState(false);
+  const [onboardingCompleted, setOnboardingCompleted] = useState<boolean | null>(null);
+  const [isRechecking, setIsRechecking] = useState(false);
+
+  const currentGroup = segments[0];
+
+  // Check if user has completed onboarding
+  const checkOnboarding = useCallback(async (isRecheck = false) => {
+    if (!user) {
+      setOnboardingChecked(true);
+      setOnboardingCompleted(null);
+      return;
+    }
+
+    if (isRecheck) {
+      setIsRechecking(true);
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('trial_start_date')
+        .eq('id', user.id)
+        .single();
+
+      if (error) {
+        // User record might not exist yet
+        setOnboardingCompleted(false);
+      } else {
+        setOnboardingCompleted(!!data?.trial_start_date);
+      }
+    } catch {
+      setOnboardingCompleted(false);
+    } finally {
+      setOnboardingChecked(true);
+      setIsRechecking(false);
+    }
+  }, [user]);
+
+  // Initial check on mount or user change
+  useEffect(() => {
+    if (!loading) {
+      checkOnboarding(false);
+    }
+  }, [user, loading, checkOnboarding]);
+
+  // Re-check when navigating to tabs from onboarding (after contract acceptance)
+  useEffect(() => {
+    if (currentGroup === '(tabs)' && onboardingCompleted === false && !isRechecking) {
+      // Might have just completed onboarding, re-check
+      checkOnboarding(true);
+    }
+  }, [currentGroup, onboardingCompleted, isRechecking, checkOnboarding]);
 
   useEffect(() => {
-    if (loading) return;
+    // Don't redirect while rechecking onboarding status
+    if (loading || !onboardingChecked || isRechecking) return;
 
-    const inAuthGroup = segments[0] === '(auth)';
-    const inOnboardingGroup = segments[0] === '(onboarding)';
+    const inAuthGroup = currentGroup === '(auth)';
+    const inTabsGroup = currentGroup === '(tabs)';
 
     if (!user && !inAuthGroup) {
       // Not authenticated, redirect to login
       router.replace('/(auth)/login');
     } else if (user && inAuthGroup) {
-      // Authenticated but in auth screens, redirect to tabs
-      // TODO: Check if onboarding is completed, if not redirect to (onboarding)
-      router.replace('/(tabs)');
+      // Authenticated but in auth screens
+      if (onboardingCompleted) {
+        router.replace('/(tabs)');
+      } else {
+        router.replace('/(onboarding)');
+      }
+    } else if (user && inTabsGroup && onboardingCompleted === false) {
+      // User is in tabs but hasn't completed onboarding, redirect to onboarding
+      router.replace('/(onboarding)');
     }
-  }, [user, loading, segments]);
+  }, [user, loading, currentGroup, onboardingChecked, onboardingCompleted, isRechecking, router]);
 
-  if (loading) {
+  if (loading || !onboardingChecked) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={colors.accent} />

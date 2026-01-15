@@ -19,7 +19,7 @@ import {
 import { router, useLocalSearchParams } from 'expo-router';
 import { colors, spacing, typography, fontSizes } from '@/constants/theme';
 import { supabase } from '@/lib/supabase';
-import { getApiBaseUrl } from '@/constants/config';
+import { getApiUrl } from '@/constants/config';
 import * as Haptics from 'expo-haptics';
 
 const REASON_CATEGORIES = [
@@ -69,7 +69,7 @@ export default function ExitReviewScreen() {
       const selectedLabel = REASON_CATEGORIES.find(r => r.id === selectedReason)?.label || selectedReason;
 
       const response = await fetch(
-        `${getApiBaseUrl()}/functions/v1/exit-ritual-complete`,
+        getApiUrl('functions/v1/exit-ritual-complete'),
         {
           method: 'POST',
           headers: {

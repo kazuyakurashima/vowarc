@@ -54,7 +54,13 @@ export function useViolationStatus(userId: string | undefined): UseViolationStat
       // Fetch violation status using the database function
       const { data: statusData, error: statusError } = await supabase
         .rpc('get_user_violation_status', { p_user_id: userId })
-        .single();
+        .single<{
+          consecutive_violation_weeks: number;
+          latest_violation_type: string | null;
+          latest_severity: number | null;
+          has_unresolved_warning: boolean;
+          has_unresolved_renegotiation: boolean;
+        }>();
 
       if (statusError) {
         throw statusError;
@@ -74,8 +80,8 @@ export function useViolationStatus(userId: string | undefined): UseViolationStat
 
       setStatus({
         consecutiveViolationWeeks: statusData?.consecutive_violation_weeks || 0,
-        latestViolationType: statusData?.latest_violation_type || null,
-        latestSeverity: statusData?.latest_severity || null,
+        latestViolationType: (statusData?.latest_violation_type as 'commitment_miss' | 'absence' | 'false_report' | null) || null,
+        latestSeverity: (statusData?.latest_severity as 1 | 2 | 3 | null) || null,
         hasUnresolvedWarning: statusData?.has_unresolved_warning || false,
         hasUnresolvedRenegotiation: statusData?.has_unresolved_renegotiation || false,
       });

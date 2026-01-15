@@ -36,6 +36,20 @@ export function SmallWinsSummary({ onPress }: SmallWinsSummaryProps) {
   }
 
   if (error || !summary) {
+    // Check if it's a "trial not started" error - show a friendlier message
+    const isTrialNotStarted = error?.message?.includes('trial not started') ||
+                              error?.message?.includes('User not found');
+
+    if (isTrialNotStarted) {
+      return (
+        <View style={styles.container}>
+          <Text style={styles.infoText}>
+            オンボーディングを完了するとメトリクスが表示されます
+          </Text>
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container}>
         <Text style={styles.errorText}>
@@ -117,6 +131,13 @@ const styles = StyleSheet.create({
     fontFamily: typography.body.fontFamily,
     fontSize: fontSizes.sm,
     color: colors.error,
+    textAlign: 'center',
+    paddingVertical: spacing.md,
+  },
+  infoText: {
+    fontFamily: typography.body.fontFamily,
+    fontSize: fontSizes.sm,
+    color: colors.textSecondary,
     textAlign: 'center',
     paddingVertical: spacing.md,
   },

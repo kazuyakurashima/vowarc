@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
 import { router } from 'expo-router';
 import { useAuth } from '@/hooks/auth';
 import { Button, TextInput } from '@/components/ui';
@@ -10,8 +10,10 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [resetMode, setResetMode] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
 
-  const { signIn } = useAuth();
+  const { signIn, resetPassword } = useAuth();
 
   const handleLogin = async () => {
     try {
@@ -35,51 +37,117 @@ export default function LoginScreen() {
     }
   };
 
+  const handleResetPassword = async () => {
+    if (!email) {
+      setError('メールアドレスを入力してください');
+      return;
+    }
+
+    try {
+      setResetLoading(true);
+      setError('');
+      await resetPassword(email);
+      Alert.alert(
+        'メールを送信しました',
+        'パスワードリセット用のリンクをメールで送信しました。メールをご確認ください。',
+        [{ text: 'OK', onPress: () => setResetMode(false) }]
+      );
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'パスワードリセットに失敗しました';
+      setError(errorMessage);
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
-      <View style={styles.content}>
-        <Text style={styles.title}>VowArc</Text>
-        <Text style={styles.subtitle}>意志を、物語に変える</Text>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.content}>
+          <Text style={styles.title}>VowArc</Text>
+          <Text style={styles.subtitle}>
+            {resetMode ? 'パスワードをリセット' : '意志を、物語に変える'}
+          </Text>
 
-        <View style={styles.form}>
-          <TextInput
-            label="メールアドレス"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoComplete="email"
-          />
+          <View style={styles.form}>
+            <TextInput
+              label="メールアドレス"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoComplete="email"
+            />
 
-          <TextInput
-            label="パスワード"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            autoComplete="password"
-          />
+            {!resetMode && (
+              <TextInput
+                label="パスワード"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                autoComplete="password"
+              />
+            )}
 
-          {error ? <Text style={styles.error}>{error}</Text> : null}
+            {error ? <Text style={styles.error}>{error}</Text> : null}
 
-          <Button
-            title="ログイン"
-            onPress={handleLogin}
-            loading={loading}
-            disabled={!email || !password}
-            style={styles.button}
-          />
+            {resetMode ? (
+              <>
+                <Button
+                  title="リセットメールを送信"
+                  onPress={handleResetPassword}
+                  loading={resetLoading}
+                  disabled={!email}
+                  style={styles.button}
+                />
+                <Button
+                  title="ログインに戻る"
+                  variant="text"
+                  onPress={() => {
+                    setResetMode(false);
+                    setError('');
+                  }}
+                  style={styles.registerButton}
+                />
+              </>
+            ) : (
+              <>
+                <Button
+                  title="ログイン"
+                  onPress={handleLogin}
+                  loading={loading}
+                  disabled={!email || !password}
+                  style={styles.button}
+                />
 
-          <Button
-            title="アカウント登録"
-            variant="text"
-            onPress={() => router.push('/(auth)/register')}
-            style={styles.registerButton}
-          />
+                <Button
+                  title="パスワードを忘れた方"
+                  variant="text"
+                  onPress={() => {
+                    setResetMode(true);
+                    setError('');
+                  }}
+                  style={styles.forgotButton}
+                />
+
+                <Button
+                  title="アカウント登録"
+                  variant="text"
+                  onPress={() => router.push('/(auth)/register')}
+                  style={styles.registerButton}
+                />
+              </>
+            )}
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }
@@ -89,10 +157,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  content: {
-    flex: 1,
+  scrollContent: {
+    flexGrow: 1,
     justifyContent: 'center',
+  },
+  content: {
     paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.xxl,
   },
   title: {
     fontFamily: typography.heading.fontFamily,
@@ -114,8 +185,11 @@ const styles = StyleSheet.create({
   button: {
     marginTop: spacing.lg,
   },
-  registerButton: {
+  forgotButton: {
     marginTop: spacing.md,
+  },
+  registerButton: {
+    marginTop: spacing.sm,
   },
   error: {
     fontFamily: typography.body.fontFamily,

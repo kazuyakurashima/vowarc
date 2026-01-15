@@ -26,6 +26,12 @@ export const typography = {
     lineHeight: 1.5,
     letterSpacing: 0,
   },
+  // Monospace font - for code/technical display
+  mono: {
+    fontFamily: 'Menlo',
+    lineHeight: 1.5,
+    letterSpacing: 0,
+  },
 } as const;
 
 export const fontSizes = {

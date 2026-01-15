@@ -15,7 +15,7 @@ import {
 import { router, useLocalSearchParams } from 'expo-router';
 import { colors, spacing, typography, fontSizes } from '@/constants/theme';
 import { supabase } from '@/lib/supabase';
-import { getApiBaseUrl } from '@/constants/config';
+import { getApiUrl } from '@/constants/config';
 import * as Haptics from 'expo-haptics';
 
 interface ExitSummary {
@@ -52,7 +52,7 @@ export default function ExitSummaryScreen() {
       }
 
       const response = await fetch(
-        `${getApiBaseUrl()}/functions/v1/exit-ritual-summary`,
+        getApiUrl('functions/v1/exit-ritual-summary'),
         {
           method: 'GET',
           headers: {

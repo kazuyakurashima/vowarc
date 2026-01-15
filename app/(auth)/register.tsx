@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import { useAuth } from '@/hooks/auth';
 import { Button, TextInput } from '@/components/ui';
@@ -53,53 +53,59 @@ export default function RegisterScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
-      <View style={styles.content}>
-        <Text style={styles.title}>VowArc</Text>
-        <Text style={styles.subtitle}>21日間のトライアル後、継続する場合は{'\n'}9週間一括¥19,800です</Text>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.content}>
+          <Text style={styles.title}>VowArc</Text>
+          <Text style={styles.subtitle}>21日間のトライアル後、継続する場合は{'\n'}9週間一括¥19,800です</Text>
 
-        <View style={styles.form}>
-          <TextInput
-            label="メールアドレス"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoComplete="email"
-          />
+          <View style={styles.form}>
+            <TextInput
+              label="メールアドレス"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoComplete="email"
+            />
 
-          <TextInput
-            label="パスワード"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            autoComplete="password"
-          />
+            <TextInput
+              label="パスワード"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+              autoComplete="password"
+            />
 
-          <TextInput
-            label="パスワード（確認）"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry
-          />
+            <TextInput
+              label="パスワード（確認）"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry
+            />
 
-          {error ? <Text style={styles.error}>{error}</Text> : null}
+            {error ? <Text style={styles.error}>{error}</Text> : null}
 
-          <Button
-            title="アカウント登録"
-            onPress={handleRegister}
-            loading={loading}
-            disabled={!email || !password || !confirmPassword}
-            style={styles.button}
-          />
+            <Button
+              title="アカウント登録"
+              onPress={handleRegister}
+              loading={loading}
+              disabled={!email || !password || !confirmPassword}
+              style={styles.button}
+            />
 
-          <Button
-            title="ログイン画面へ戻る"
-            variant="text"
-            onPress={() => router.back()}
-            style={styles.backButton}
-          />
+            <Button
+              title="ログイン画面へ戻る"
+              variant="text"
+              onPress={() => router.back()}
+              style={styles.backButton}
+            />
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }
@@ -109,10 +115,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  content: {
-    flex: 1,
+  scrollContent: {
+    flexGrow: 1,
     justifyContent: 'center',
+  },
+  content: {
     paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.xxl,
   },
   title: {
     fontFamily: typography.heading.fontFamily,

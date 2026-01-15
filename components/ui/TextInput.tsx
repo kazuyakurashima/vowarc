@@ -49,12 +49,11 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.base,
     color: colors.textPrimary,
     backgroundColor: colors.surface,
-    paddingVertical: spacing.md,
+    paddingVertical: spacing.lg,
     paddingHorizontal: spacing.lg,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: 'transparent',
-    lineHeight: fontSizes.base * typography.body.lineHeight,
   },
   inputError: {
     borderColor: colors.error,
