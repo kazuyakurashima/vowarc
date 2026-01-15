@@ -10,7 +10,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from '@/hooks/auth';
 import { useMapNodesGrouped } from '@/hooks/data/useMapNodes';
 import { MapNode, MapNodeType } from '@/lib/supabase/types';
 import { colors, spacing, typography, fontSizes } from '@/constants/theme';

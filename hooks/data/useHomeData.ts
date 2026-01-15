@@ -1,4 +1,4 @@
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from '@/hooks/auth';
 import { useUserProfile } from './useUserProfile';
 import { useVow } from './useVow';
 import { useMeaningStatement } from './useMeaningStatement';

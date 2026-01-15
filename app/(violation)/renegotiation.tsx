@@ -23,7 +23,7 @@ import { colors, spacing, typography, fontSizes } from '@/constants/theme';
 import { useVow } from '@/hooks/data/useVow';
 import { useCommitments } from '@/hooks/data/useCommitments';
 import { useViolationStatus } from '@/hooks/data/useViolationStatus';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from '@/hooks/auth';
 import { supabase } from '@/lib/supabase';
 import * as Haptics from 'expo-haptics';
 

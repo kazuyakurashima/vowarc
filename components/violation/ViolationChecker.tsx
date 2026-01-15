@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { router } from 'expo-router';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from '@/hooks/auth';
 import { useViolationStatus } from '@/hooks/data/useViolationStatus';
 import WarningModal from './WarningModal';
 

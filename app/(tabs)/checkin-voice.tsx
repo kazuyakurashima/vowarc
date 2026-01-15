@@ -21,7 +21,7 @@ import { Orb } from '@/components/checkin/Orb';
 import { IfThenQuestion } from '@/components/checkin/IfThenQuestion';
 import { Button } from '@/components/ui/Button';
 import { colors, spacing, typography, fontSizes } from '@/constants/theme';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from '@/hooks/auth';
 import { supabase } from '@/lib/supabase';
 import { buildApiUrl } from '@/lib/api-config';
 

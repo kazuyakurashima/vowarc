@@ -18,8 +18,8 @@ function RootLayoutNav() {
 
   const currentGroup = segments[0];
 
-  // Check if user has completed onboarding
-  const checkOnboarding = useCallback(async (isRecheck = false) => {
+  // Check if user has completed onboarding with retry logic
+  const checkOnboarding = useCallback(async (isRecheck = false, retryCount = 0) => {
     if (!user) {
       setOnboardingChecked(true);
       setOnboardingCompleted(null);
@@ -38,7 +38,13 @@ function RootLayoutNav() {
         .single();
 
       if (error) {
-        // User record might not exist yet
+        // PGRST116 = no rows found - user record might not exist yet
+        if (error.code === 'PGRST116' && retryCount < 2) {
+          // Retry after a short delay (RLS or record creation might be delayed)
+          await new Promise(resolve => setTimeout(resolve, 500));
+          return checkOnboarding(isRecheck, retryCount + 1);
+        }
+        // After retries or other errors, assume onboarding not completed
         setOnboardingCompleted(false);
       } else {
         setOnboardingCompleted(!!data?.trial_start_date);

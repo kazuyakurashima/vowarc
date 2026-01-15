@@ -17,7 +17,7 @@ import {
 import { router, useLocalSearchParams } from 'expo-router';
 import { colors, spacing, typography, fontSizes } from '@/constants/theme';
 import { useVow } from '@/hooks/data/useVow';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from '@/hooks/auth';
 import { supabase } from '@/lib/supabase';
 import * as Haptics from 'expo-haptics';
 

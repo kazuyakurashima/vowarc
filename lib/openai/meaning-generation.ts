@@ -74,7 +74,19 @@ Ideal（3ヶ月後の理想の姿）: ${answers.ideal}
     throw new Error('Failed to generate Meaning Statement and Vow');
   }
 
-  const result = JSON.parse(content);
+  let result: { meaningStatement?: string; vow?: string };
+  try {
+    result = JSON.parse(content);
+  } catch (parseError) {
+    console.error('Failed to parse OpenAI response:', content);
+    throw new Error('AIからの応答を解析できませんでした。もう一度お試しください。');
+  }
+
+  // Validate required fields
+  if (!result.meaningStatement || !result.vow) {
+    console.error('Invalid response structure:', result);
+    throw new Error('AIからの応答が不完全でした。もう一度お試しください。');
+  }
 
   return {
     meaningStatement: result.meaningStatement,
