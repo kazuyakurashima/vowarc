@@ -63,7 +63,7 @@ export default function Day21VowUpdateScreen() {
           <Text style={styles.title}>誓いの結晶化</Text>
           <Text style={styles.subtitle}>
             21日間の体験を経て、{'\n'}
-            あなたの誓いを"今の言葉"に更新してください
+            あなたの誓いを&quot;今の言葉&quot;に更新してください
           </Text>
         </View>
 

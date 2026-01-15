@@ -145,7 +145,7 @@ export default function ExitSummaryScreen() {
           <Text style={styles.potentialTitle}>AIが見ていた可能性</Text>
         </View>
         <Text style={styles.potentialText}>
-          "{summary?.potential_statement}"
+          &quot;{summary?.potential_statement}&quot;
         </Text>
       </View>
 
