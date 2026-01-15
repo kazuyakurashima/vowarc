@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
+import * as Linking from 'expo-linking';
 import { supabase } from '@/lib/supabase';
 import {
   initializeRevenueCat,
@@ -97,8 +98,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const resetPassword = async (email: string) => {
+    // Use Linking.createURL for Expo Go compatibility
+    const redirectUrl = Linking.createURL('reset-password');
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'vowarc://reset-password',
+      redirectTo: redirectUrl,
     });
     if (error) throw error;
   };

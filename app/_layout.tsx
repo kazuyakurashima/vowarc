@@ -26,7 +26,7 @@ function RootLayoutNav() {
       return;
     }
 
-    if (isRecheck) {
+    if (isRecheck && retryCount === 0) {
       setIsRechecking(true);
     }
 
@@ -42,16 +42,20 @@ function RootLayoutNav() {
         if (error.code === 'PGRST116' && retryCount < 2) {
           // Retry after a short delay (RLS or record creation might be delayed)
           await new Promise(resolve => setTimeout(resolve, 500));
+          // Don't update state here - let the retry handle it
           return checkOnboarding(isRecheck, retryCount + 1);
         }
         // After retries or other errors, assume onboarding not completed
         setOnboardingCompleted(false);
+        setOnboardingChecked(true);
+        setIsRechecking(false);
       } else {
         setOnboardingCompleted(!!data?.trial_start_date);
+        setOnboardingChecked(true);
+        setIsRechecking(false);
       }
     } catch {
       setOnboardingCompleted(false);
-    } finally {
       setOnboardingChecked(true);
       setIsRechecking(false);
     }
@@ -78,12 +82,14 @@ function RootLayoutNav() {
 
     const inAuthGroup = currentGroup === '(auth)';
     const inTabsGroup = currentGroup === '(tabs)';
+    // Allow reset-password screen even when authenticated (recovery session)
+    const isResetPasswordScreen = inAuthGroup && segments[1] === 'reset-password';
 
     if (!user && !inAuthGroup) {
       // Not authenticated, redirect to login
       router.replace('/(auth)/login');
-    } else if (user && inAuthGroup) {
-      // Authenticated but in auth screens
+    } else if (user && inAuthGroup && !isResetPasswordScreen) {
+      // Authenticated but in auth screens (except reset-password)
       if (onboardingCompleted) {
         router.replace('/(tabs)');
       } else {
@@ -93,7 +99,7 @@ function RootLayoutNav() {
       // User is in tabs but hasn't completed onboarding, redirect to onboarding
       router.replace('/(onboarding)');
     }
-  }, [user, loading, currentGroup, onboardingChecked, onboardingCompleted, isRechecking, router]);
+  }, [user, loading, currentGroup, segments, onboardingChecked, onboardingCompleted, isRechecking, router]);
 
   if (loading || !onboardingChecked) {
     return (
