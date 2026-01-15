@@ -49,8 +49,8 @@ export default function LoginScreen() {
       await resetPassword(email);
       Alert.alert(
         'メールを送信しました',
-        'パスワードリセット用のリンクをメールで送信しました。メールをご確認ください。',
-        [{ text: 'OK', onPress: () => setResetMode(false) }]
+        'パスワードリセット用のリンクをメールで送信しました。\n\n1. メールのリンクをクリック\n2. このアプリに戻る\n3. 「新しいパスワードを設定」をタップ',
+        [{ text: 'OK' }]
       );
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'パスワードリセットに失敗しました';
@@ -107,6 +107,15 @@ export default function LoginScreen() {
                   disabled={!email}
                   style={styles.button}
                 />
+                <Button
+                  title="新しいパスワードを設定"
+                  variant="secondary"
+                  onPress={() => router.push('/(auth)/reset-password')}
+                  style={styles.setPasswordButton}
+                />
+                <Text style={styles.helpText}>
+                  メールのリンクをクリック後にタップしてください
+                </Text>
                 <Button
                   title="ログインに戻る"
                   variant="text"
@@ -187,6 +196,16 @@ const styles = StyleSheet.create({
   },
   forgotButton: {
     marginTop: spacing.md,
+  },
+  setPasswordButton: {
+    marginTop: spacing.lg,
+  },
+  helpText: {
+    fontFamily: typography.body.fontFamily,
+    fontSize: fontSizes.xs,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginTop: spacing.sm,
   },
   registerButton: {
     marginTop: spacing.sm,

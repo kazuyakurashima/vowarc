@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
-import * as Linking from 'expo-linking';
 import { supabase } from '@/lib/supabase';
 import {
   initializeRevenueCat,
@@ -98,11 +97,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const resetPassword = async (email: string) => {
-    // Use Linking.createURL for Expo Go compatibility
-    const redirectUrl = Linking.createURL('reset-password');
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: redirectUrl,
-    });
+    // Don't use redirectTo for Expo Go - it doesn't handle deep links well
+    // Users will click the email link (which verifies the token), then manually return to the app
+    const { error } = await supabase.auth.resetPasswordForEmail(email);
     if (error) throw error;
   };
 
